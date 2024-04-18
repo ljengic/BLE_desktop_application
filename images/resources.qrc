@@ -1,0 +1,11 @@
+<RCC>
+  <qresource prefix="icons">
+    <file>icons/icons8-bluetooth-100.png</file>
+    <file>icons/icons8-close-120.png</file>
+    <file>icons/icons8-home-100.png</file>
+    <file>icons/icons8-human-100.png</file>
+    <file>icons/icons8-menu-100.png</file>
+    <file>icons/icons8-result-100.png</file>
+    <file>icons/icons8-start-100.png</file>
+  </qresource>
+</RCC>
