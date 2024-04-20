@@ -1,8 +1,9 @@
-from PyQt5.QtBluetooth import QLowEnergyController, QLowEnergyService, QBluetoothUuid
+import sys
+import time
+from PyQt5.QtBluetooth import QLowEnergyController, QLowEnergyService, QBluetoothUuid, QLowEnergyCharacteristic
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 class BLE_Controller(QObject):
-    controllerOutputMessage = pyqtSignal(str)
     controllerConnected = pyqtSignal()
     servicesFound = pyqtSignal()
     serviceOpened = pyqtSignal()
@@ -10,32 +11,35 @@ class BLE_Controller(QObject):
     def __init__(self):
         QObject.__init__(self)
 
+    #connect to device
     def connectDevice(self, dev):
         self.ble_device = dev
         print("Connnecting to {0}".format(self.ble_device.name()))      #debug
-        self.controllerOutputMessage.emit(">>Connecting to " + self.ble_device.name())
         
         self.controller = QLowEnergyController.createCentral(self.ble_device)    
         
         self.controller.connected.connect(self.deviceConnected)
         self.controller.disconnected.connect(self.deviceDisconnected)
         self.controller.error.connect(self.errorReceived)
-        self.controller.serviceDiscovered.connect(self.addLEservice)
+        self.controller.serviceDiscovered.connect(self.service_found_print)
         self.controller.discoveryFinished.connect(self.serviceScanDone)
 
         self.controller.setRemoteAddressType(QLowEnergyController.PublicAddress)
         self.controller.connectToDevice()
 
+    #disconnect from device
     def disconnect(self):
         self.controller.disconnectFromDevice()
-        #del self.controller
 
+    #when device is connected start discovering services
     def deviceConnected(self):
-        print("Device connected\n")             #debug
+        print("Device connected\n")
+        time.sleep(0.1)
         self.controllerConnected.emit()
         self.controller.discoverServices()
 
-    def addLEservice(self, servUid):        #debugging purpose function, can delete later
+    #print descovered service, used for debugging
+    def service_found_print(self, servUid):
         self.serviceUid = servUid
         print("Found service {0}\n".format(self.serviceUid.toString()))
 
@@ -44,14 +48,14 @@ class BLE_Controller(QObject):
         print("{0}\n".format(errMessage.toString()))
         self.controllerOutputMessage.emit(">>ERROR\n")
 
+    #device disconnected callback
     def deviceDisconnected(self):
         print("device disconnected\n")
-        self.controllerOutputMessage.emit(">>Device disconnected - Press Disconnect?\n")
 
+    #service scan done callback
     def serviceScanDone(self):
         print("Service scan done\n")
         self.servicesFound.emit()
-        self.controllerOutputMessage.emit(">>Services scan done\n")
 
     def readService(self, ble_service_UID):
         self.openedService = self.controller.createServiceObject(ble_service_UID)
