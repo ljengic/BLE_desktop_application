@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gui.ui'
+# Form implementation generated from reading ui file './package/main_app/gui.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -23,10 +23,10 @@ class Ui_MainWindow(object):
         self.menu_icons_only.setObjectName("menu_icons_only")
         self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.menu_icons_only)
         self.verticalLayout_2.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_2.setSpacing(0)
+        self.verticalLayout_2.setSpacing(3)
         self.verticalLayout_2.setObjectName("verticalLayout_2")
         self.verticalLayout = QtWidgets.QVBoxLayout()
-        self.verticalLayout.setSpacing(0)
+        self.verticalLayout.setSpacing(3)
         self.verticalLayout.setObjectName("verticalLayout")
         self.btn_home_1 = QtWidgets.QPushButton(self.menu_icons_only)
         self.btn_home_1.setText("")
@@ -97,10 +97,10 @@ class Ui_MainWindow(object):
         self.menu_full.setObjectName("menu_full")
         self.verticalLayout_4 = QtWidgets.QVBoxLayout(self.menu_full)
         self.verticalLayout_4.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_4.setSpacing(0)
+        self.verticalLayout_4.setSpacing(3)
         self.verticalLayout_4.setObjectName("verticalLayout_4")
         self.verticalLayout_3 = QtWidgets.QVBoxLayout()
-        self.verticalLayout_3.setSpacing(0)
+        self.verticalLayout_3.setSpacing(3)
         self.verticalLayout_3.setObjectName("verticalLayout_3")
         self.btn_home_2 = QtWidgets.QPushButton(self.menu_full)
         font = QtGui.QFont()
@@ -176,13 +176,13 @@ class Ui_MainWindow(object):
         self.main_screen.setObjectName("main_screen")
         self.verticalLayout_5 = QtWidgets.QVBoxLayout(self.main_screen)
         self.verticalLayout_5.setContentsMargins(0, 0, 0, 0)
-        self.verticalLayout_5.setSpacing(0)
+        self.verticalLayout_5.setSpacing(7)
         self.verticalLayout_5.setObjectName("verticalLayout_5")
         self.status_bar = QtWidgets.QWidget(self.main_screen)
         self.status_bar.setObjectName("status_bar")
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.status_bar)
-        self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
-        self.horizontalLayout.setSpacing(0)
+        self.horizontalLayout.setContentsMargins(0, 0, 0, 5)
+        self.horizontalLayout.setSpacing(3)
         self.horizontalLayout.setObjectName("horizontalLayout")
         self.btn_menu = QtWidgets.QPushButton(self.status_bar)
         self.btn_menu.setText("")

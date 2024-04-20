@@ -28,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.home = Home()
         self.ble = BLE()
         self.patients = Patients()
-        self.measure = Measure()
+        self.measure = Measure(self.ble)
         self.results = Results()
 
         self.stackedWidget.addWidget(self.home)
@@ -67,11 +67,10 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def btn_results_on_click(self):
         self.stackedWidget.setCurrentIndex(4)
 
-
 #run application
 def run():
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyleSheet(app_load_css("./style/Darkeum.qss"))
+    #app.setStyleSheet(app_load_css("./style/Darkeum.qss"))
     window = MainWindow()
     window.show()
     return app.exec_()
