@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gui_measure.ui'
+# Form implementation generated from reading ui file './package/measure/gui_measure.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -12,33 +12,44 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Measure(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(580, 458)
-        self.gridLayout = QtWidgets.QGridLayout(Form)
-        self.gridLayout.setObjectName("gridLayout")
-        self.label = QtWidgets.QLabel(Form)
-        font = QtGui.QFont()
-        font.setPointSize(20)
-        self.label.setFont(font)
-        self.label.setAlignment(QtCore.Qt.AlignCenter)
-        self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+    def setupUi(self, Measure):
+        Measure.setObjectName("Measure")
+        Measure.resize(580, 458)
+        self.verticalLayout = QtWidgets.QVBoxLayout(Measure)
+        self.verticalLayout.setObjectName("verticalLayout")
+        self.widget_2 = QtWidgets.QWidget(Measure)
+        self.widget_2.setMaximumSize(QtCore.QSize(16777215, 100))
+        self.widget_2.setObjectName("widget_2")
+        self.horizontalLayout = QtWidgets.QHBoxLayout(self.widget_2)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.btn_start = QtWidgets.QPushButton(self.widget_2)
+        self.btn_start.setObjectName("btn_start")
+        self.horizontalLayout.addWidget(self.btn_start)
+        spacerItem = QtWidgets.QSpacerItem(379, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout.addItem(spacerItem)
+        self.btn_stop = QtWidgets.QPushButton(self.widget_2)
+        self.btn_stop.setObjectName("btn_stop")
+        self.horizontalLayout.addWidget(self.btn_stop)
+        self.verticalLayout.addWidget(self.widget_2)
+        self.widget = QtWidgets.QWidget(Measure)
+        self.widget.setObjectName("widget")
+        self.verticalLayout.addWidget(self.widget)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(Measure)
+        QtCore.QMetaObject.connectSlotsByName(Measure)
 
-    def retranslateUi(self, Form):
+    def retranslateUi(self, Measure):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "Start Measurment"))
+        Measure.setWindowTitle(_translate("Measure", "Form"))
+        self.btn_start.setText(_translate("Measure", "Start"))
+        self.btn_stop.setText(_translate("Measure", "Stop"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    Measure = QtWidgets.QWidget()
+    ui = Ui_Measure()
+    ui.setupUi(Measure)
+    Measure.show()
     sys.exit(app.exec_())
