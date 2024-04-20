@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Form</class>
- <widget class="QWidget" name="Form">
+ <class>Home</class>
+ <widget class="QWidget" name="Home">
   <property name="geometry">
    <rect>
     <x>0</x>
@@ -22,7 +22,7 @@
       </font>
      </property>
      <property name="text">
-      <string>Home page</string>
+      <string>Dobrodošli dragi gosti!</string>
      </property>
      <property name="alignment">
       <set>Qt::AlignCenter</set>

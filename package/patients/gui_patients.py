@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'gui_patients.ui'
+# Form implementation generated from reading ui file './package/patients/gui_patients.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -12,12 +12,12 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 
 
 class Ui_Patients(object):
-    def setupUi(self, Form):
-        Form.setObjectName("Form")
-        Form.resize(580, 458)
-        self.gridLayout = QtWidgets.QGridLayout(Form)
+    def setupUi(self, Patients):
+        Patients.setObjectName("Patients")
+        Patients.resize(580, 458)
+        self.gridLayout = QtWidgets.QGridLayout(Patients)
         self.gridLayout.setObjectName("gridLayout")
-        self.label = QtWidgets.QLabel(Form)
+        self.label = QtWidgets.QLabel(Patients)
         font = QtGui.QFont()
         font.setPointSize(20)
         self.label.setFont(font)
@@ -25,20 +25,20 @@ class Ui_Patients(object):
         self.label.setObjectName("label")
         self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
 
-        self.retranslateUi(Form)
-        QtCore.QMetaObject.connectSlotsByName(Form)
+        self.retranslateUi(Patients)
+        QtCore.QMetaObject.connectSlotsByName(Patients)
 
-    def retranslateUi(self, Form):
+    def retranslateUi(self, Patients):
         _translate = QtCore.QCoreApplication.translate
-        Form.setWindowTitle(_translate("Form", "Form"))
-        self.label.setText(_translate("Form", "Patiens page"))
+        Patients.setWindowTitle(_translate("Patients", "Form"))
+        self.label.setText(_translate("Patients", "Patiens page"))
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Form = QtWidgets.QWidget()
-    ui = Ui_Form()
-    ui.setupUi(Form)
-    Form.show()
+    Patients = QtWidgets.QWidget()
+    ui = Ui_Patients()
+    ui.setupUi(Patients)
+    Patients.show()
     sys.exit(app.exec_())
