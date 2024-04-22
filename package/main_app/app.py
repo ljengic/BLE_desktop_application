@@ -52,25 +52,32 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_results_1.clicked.connect(self.btn_results_on_click)
         self.btn_results_2.clicked.connect(self.btn_results_on_click)
 
+        self.label_screen_name.setText("Home screen")
+
     def btn_home_on_click(self):
+        self.label_screen_name.setText("Home screen")
         self.stackedWidget.setCurrentIndex(0)
 
     def btn_ble_on_click(self):
+        self.label_screen_name.setText("BLE connection")
         self.stackedWidget.setCurrentIndex(1)
 
     def btn_patients_on_click(self):
+        self.label_screen_name.setText("Patients")
         self.stackedWidget.setCurrentIndex(2)
 
     def btn_measure_on_click(self):
+        self.label_screen_name.setText("Measure")
         self.stackedWidget.setCurrentIndex(3)
 
     def btn_results_on_click(self):
+        self.label_screen_name.setText("Results")
         self.stackedWidget.setCurrentIndex(4)
 
 #run application
 def run():
     app = QtWidgets.QApplication(sys.argv)
-    #app.setStyleSheet(app_load_css("./style/Darkeum.qss"))
+    #app.setStyleSheet(app_load_css("./style/Adaptic.qss"))
     window = MainWindow()
     window.show()
     return app.exec_()
