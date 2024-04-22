@@ -5,6 +5,7 @@ from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 
 class BLE_Controller(QObject):
     controllerConnected = pyqtSignal()
+    controllerDisconnected = pyqtSignal()
     servicesFound = pyqtSignal()
     serviceOpened = pyqtSignal()
 
@@ -34,8 +35,8 @@ class BLE_Controller(QObject):
     #when device is connected start discovering services
     def deviceConnected(self):
         print("Device connected\n")
-        time.sleep(0.1)
         self.controllerConnected.emit()
+        time.sleep(0.1)
         self.controller.discoverServices()
 
     #print descovered service, used for debugging
@@ -44,13 +45,12 @@ class BLE_Controller(QObject):
         print("Found service {0}\n".format(self.serviceUid.toString()))
 
     def errorReceived(self, errMessage):
-        print("error ")
-        print("{0}\n".format(errMessage.toString()))
-        self.controllerOutputMessage.emit(">>ERROR\n")
+        print("error ",errMessage)
 
     #device disconnected callback
     def deviceDisconnected(self):
         print("device disconnected\n")
+        self.controllerDisconnected.emit()
 
     #service scan done callback
     def serviceScanDone(self):

@@ -1,6 +1,6 @@
 import sys
 import time
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtCore import QByteArray
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtBluetooth import QBluetoothUuid, QLowEnergyService, QLowEnergyCharacteristic
@@ -24,15 +24,20 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.ble_scanner.devices_scanned_message.connect(self.device_list_update)
         self.ble_controller.servicesFound.connect(self.handleServicesFound)
         self.ble_controller.serviceOpened.connect(self.handleOpenedService)
-        self.ble_controller.controllerConnected.connect(self.handleDeviceConnected)
+        self.btn_disconnect.clicked.connect(self.btn_disconnect_handle)
 
         self.listWidget.itemClicked.connect(self.device_list_item_clicked)
+
+        self.ble_controller.controllerConnected.connect(self.handleDeviceConnected)
+        self.ble_controller.controllerDisconnected.connect(self.handleDeviceDisconnected)
+
+        self.stackedWidget.setCurrentIndex(0)
+        self.frame_7.hide()
 
     def btn_scan_press_handle(self):
         self.listWidget.clear()
         self.btn_scan.setEnabled(False)
-        self.btn_connect.setEnabled(False)
-        #self.textBrowser.clear()
+        self.frame_7.hide()
         self.ble_scanner.scan_devices()
 
     def device_list_update(self,device_list):
@@ -47,10 +52,15 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
     def btn_connect_handler(self):
         self.ble_controller.connectDevice(self.listWidget.currentItem().data(QtCore.Qt.UserRole))
 
+    def btn_disconnect_handle(self):
+        self.ble_controller.disconnect()
+        self.handleDeviceDisconnected()
+
     #Device clicked in list view
     def device_list_item_clicked(self, itemC):
         self.btn_connect.setEnabled(True)
-        self.deviceInfo = itemC.data(QtCore.Qt.UserRole)
+        self.frame_7.show()
+        self.ble_set_info_data(itemC.data(QtCore.Qt.UserRole))
 
     #Adds discovered BLE services to list view
     def handleServicesFound(self):
@@ -81,9 +91,22 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
 
     #Called when succesfully connected to device
     def handleDeviceConnected(self):
+        self.label_conn_status.setText("Connected")
+        self.label_ble_info.setText("Wohooo, you can start measuring :)")
+        self.label_2.setPixmap(QtGui.QPixmap(":/icons/icons/ble_on.png"))
+        self.stackedWidget.setCurrentIndex(1)
+        self.frame.hide()
         print("Successfully connected!\n")
-
         #self.ble_serviceAgent.scan_services(self.ble_controller.ble_device.address())
+
+    def handleDeviceDisconnected(self):
+        self.label_conn_status.setText("Disconnected")
+        self.label_ble_info.setText("Please scan availabe BLE devices and \nchoose device to connect")
+        self.label_2.setPixmap(QtGui.QPixmap(":/icons/icons/ble_off.png"))
+        self.stackedWidget.setCurrentIndex(0)
+        self.frame_7.hide()
+        self.listWidget.clear()
+        self.frame.show()
 
     def suscribe_to_char(self, characterictis):
         self.karakteristika = characterictis
@@ -109,4 +132,11 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         q_b.setNum(val,10)
         print("Sending command to micreocontroller ",val)
         self.ble_controller.openedService.writeCharacteristic(self.write_char,q_b,QLowEnergyService.WriteWithoutResponse)
+
+    def ble_set_info_data(self, device):
+        self.label_inf_name.setText(device.name())
+        #self.label_inf_type.setText(device.coreConfigurations())
+        self.label_inf_rssi.setText(str(device.rssi()))
+        self.label_inf_address.setText(device.address().toString())
+
 
