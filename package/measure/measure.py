@@ -14,6 +14,10 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
         self.btn_start.clicked.connect(self.btn_start_press_handle)
         self.btn_stop.clicked.connect(self.btn_stop_press_handle)
+        self.ble.ble_msg_received.connect(self.msg_received)
+
+    def msg_received(self, msg):
+        print("message arrived : ",msg)
 
     def btn_start_press_handle(self):
         self.ble.ble_send(3)

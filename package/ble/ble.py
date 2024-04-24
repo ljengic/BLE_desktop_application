@@ -10,6 +10,8 @@ from package.ble.controller import BLE_Controller
 
 class BLE(QtWidgets.QWidget, Ui_BLE):
 
+    ble_msg_received = pyqtSignal(str)
+
     def __init__(self, parent=None):
         super(BLE, self).__init__(parent)
         self.setupUi(self)
@@ -122,10 +124,8 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
     def updateVal(self, Charac, newVal):
         self.val = QByteArray()
         self.val = newVal
-
-        #self.strng = self.val.data().decode()           #decode bytes to string
-        print(self.val.data())
-        #self.textBrowser_3.append("Received value : {0}".format(self.strng))
+        self.ble_string_msg = self.val.data().decode()
+        self.ble_msg_received.emit(self.ble_string_msg)
 
     def ble_send(self, val):
         q_b = QByteArray()
