@@ -52,6 +52,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.btn_scan.setEnabled(True)
 
     def btn_connect_handler(self):
+        self.btn_connect.setEnabled(False)
         self.ble_controller.connectDevice(self.listWidget.currentItem().data(QtCore.Qt.UserRole))
 
     def btn_disconnect_handle(self):
