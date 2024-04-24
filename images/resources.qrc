@@ -1,6 +1,8 @@
 <RCC>
   <qresource prefix="icons">
     <file>icons/icons8-bluetooth-100.png</file>
+    <file>icons/ble_off.png</file>
+    <file>icons/ble_on.png</file>
     <file>icons/icons8-close-120.png</file>
     <file>icons/icons8-home-100.png</file>
     <file>icons/icons8-human-100.png</file>
