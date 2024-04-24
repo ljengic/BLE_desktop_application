@@ -1,3 +1,4 @@
+import os
 import sys
 import time
 from PyQt5 import QtWidgets, QtCore
@@ -53,6 +54,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_results_2.clicked.connect(self.btn_results_on_click)
 
         self.label_screen_name.setText("Home screen")
+
+        self.make_data_folder()
+
+    def make_data_folder(self):
+        self.path = os.getcwd() + "\data"
+        if not os.path.isdir(self.path):
+            print("Creating folder data.")
+            os.makedirs(self.path)
+        else:
+            print("Folder already exists.")
 
     def btn_home_on_click(self):
         self.label_screen_name.setText("Home screen")
