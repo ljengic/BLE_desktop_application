@@ -1,6 +1,10 @@
+import os
 import sys
 import time
 import csv
+import pathlib
+import glob
+from datetime import date
 from PyQt5 import QtWidgets, QtCore
 from package.measure.gui_measure import Ui_Measure
 from package.ble.ble import BLE
@@ -24,7 +28,9 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
     def csv_write_raw_data(self, data):
         #change this later, there is no need for opening the file every time
-        with open('./data/raw_data.csv', 'a', newline='') as file:
+
+        self.raw_data_file = self.folder_path + '/raw_data.csv'
+        with open(self.raw_data_file, 'a', newline='') as file:
             self.writer = csv.writer(file)
             self.writer.writerow(data)
             file.close()
@@ -40,7 +46,8 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
     def csv_write_temperature_data(self,msg):
         print("Received data from temperature sensor.")
-        with open('./data/temp_data.csv', 'a', newline='') as file:
+        self.temp_data_file = self.folder_path + '/temp_data.csv'
+        with open( self.temp_data_file, 'a', newline='') as file:
             self.writer = csv.writer(file)
             self.writer.writerow([msg[0],msg[2]])
             file.close()
@@ -49,8 +56,20 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         print("Received data from bioz sensor.")
 
     def btn_start_press_handle(self):
-        #make folder for this measurment
+        self.make_measurment_folder()
         self.ble.ble_send(3)
 
     def btn_stop_press_handle(self):
         self.ble.ble_send(4)
+
+    #make folder for this measurment
+    def make_measurment_folder(self):
+        today = date.today()
+        name_prefix = "Measurment_" + today.strftime("%m-%d-%Y") + '_#'
+
+        today_dirs = glob.glob('data/'+name_prefix+'*')
+        today_measurments = len(today_dirs)
+        name = name_prefix + str(today_measurments + 1)
+
+        self.folder_path = os.getcwd() + "\data\\" + name
+        os.makedirs(self.folder_path)
