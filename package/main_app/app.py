@@ -5,7 +5,6 @@ from PyQt5 import QtWidgets, QtCore
 from package.main_app.gui import Ui_MainWindow
 from package.home.home import Home
 from package.ble.ble import BLE
-from package.patients.patients import Patients
 from package.measure.measure import Measure
 from package.results.results import Results
 
@@ -28,13 +27,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.home = Home()
         self.ble = BLE()
-        self.patients = Patients()
+        self.measure = Measure(self.ble, self.play_fail_sound)
         self.measure = Measure(self.ble)
         self.results = Results()
 
         self.stackedWidget.addWidget(self.home)
         self.stackedWidget.addWidget(self.ble)
-        self.stackedWidget.addWidget(self.patients)
         self.stackedWidget.addWidget(self.measure)
         self.stackedWidget.addWidget(self.results)
 
@@ -43,9 +41,6 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.btn_ble_1.clicked.connect(self.btn_ble_on_click)
         self.btn_ble_2.clicked.connect(self.btn_ble_on_click)
-
-        self.btn_patient_1.clicked.connect(self.btn_patients_on_click)
-        self.btn_patient_2.clicked.connect(self.btn_patients_on_click)
 
         self.btn_start_1.clicked.connect(self.btn_measure_on_click)
         self.btn_start_2.clicked.connect(self.btn_measure_on_click)
@@ -71,19 +66,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
     def btn_ble_on_click(self):
         self.label_screen_name.setText("BLE connection")
+        self.btn_ble_1.setChecked(True)
         self.stackedWidget.setCurrentIndex(1)
-
-    def btn_patients_on_click(self):
-        self.label_screen_name.setText("Patients")
-        self.stackedWidget.setCurrentIndex(2)
 
     def btn_measure_on_click(self):
         self.label_screen_name.setText("Measure")
-        self.stackedWidget.setCurrentIndex(3)
+        self.stackedWidget.setCurrentIndex(2)
 
     def btn_results_on_click(self):
         self.label_screen_name.setText("Results")
-        self.stackedWidget.setCurrentIndex(4)
+        self.stackedWidget.setCurrentIndex(3)
 
 #run application
 def run():
