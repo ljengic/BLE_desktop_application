@@ -20,6 +20,8 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.ble_scanner = BLE_Scanner()
         self.ble_controller = BLE_Controller()
 
+        self.is_connected = False
+
         self.btn_connect.setEnabled(False)
         self.btn_scan.clicked.connect(self.btn_scan_press_handle)
         self.btn_connect.clicked.connect(self.btn_connect_handler)
@@ -99,6 +101,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.label_2.setPixmap(QtGui.QPixmap(":/icons/icons/ble_on.png"))
         self.stackedWidget.setCurrentIndex(1)
         self.frame.hide()
+        self.is_connected = True
         print("Successfully connected!\n")
         #self.ble_serviceAgent.scan_services(self.ble_controller.ble_device.address())
 
@@ -110,6 +113,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.frame_7.hide()
         self.listWidget.clear()
         self.frame.show()
+        self.is_connected = False
 
     def suscribe_to_char(self, characterictis):
         self.karakteristika = characterictis
@@ -139,5 +143,8 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         #self.label_inf_type.setText(device.coreConfigurations())
         self.label_inf_rssi.setText(str(device.rssi()))
         self.label_inf_address.setText(device.address().toString())
+
+    def is_device_connected(self):
+        return self.is_connected
 
 
