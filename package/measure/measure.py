@@ -6,20 +6,49 @@ import pathlib
 import glob
 from datetime import date
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtWidgets import QMessageBox
+from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from package.measure.gui_measure import Ui_Measure
 from package.ble.ble import BLE
+from package.patients.patient import Patient
 
 class Measure(QtWidgets.QWidget, Ui_Measure):
 
-    def __init__(self,ble_instance):
+    ble_not_connected_error = pyqtSignal()
+
+    def __init__(self,ble_instance, fail_sound):
         super(Measure, self).__init__()
         self.setupUi(self)
 
         self.ble = ble_instance
+        self.play_fail_sound = fail_sound
 
         self.btn_start.clicked.connect(self.btn_start_press_handle)
         self.btn_stop.clicked.connect(self.btn_stop_press_handle)
         self.ble.ble_msg_received.connect(self.msg_received)
+        self.btn_start_new_measurment.clicked.connect(self.btn_start_new_measurment_handle)
+        self.btn_complete.clicked.connect(self.btn_complete_handle)
+
+        self.stackedWidget.setCurrentIndex(0)
+
+    def btn_start_new_measurment_handle(self):
+        #clear text 
+        #self.clear_input_text_boxs()
+        
+        #check BLE connection
+        if(True == self.ble.is_device_connected()):
+            #switch to page for patient data input
+            self.stackedWidget.setCurrentIndex(1)
+        else:
+            self.play_fail_sound()
+            self.show_ble_popup()
+            print("BLE not connected, you cannot measure, sorryy, byee.")
+
+    def btn_complete_handle(self):
+        # first check if data is valid !
+        self.patient = self.get_patient_from_input_data()
+        self.patient.print_patient_info()
+        self.stackedWidget.setCurrentIndex(2)
 
     def msg_received(self, msg):
         msg_list = msg.split(';') 
@@ -61,6 +90,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
     def btn_stop_press_handle(self):
         self.ble.ble_send(4)
+        self.stackedWidget.setCurrentIndex(0)
 
     #make folder for this measurment
     def make_measurment_folder(self):
@@ -73,3 +103,43 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
         self.folder_path = os.getcwd() + "\data\\" + name
         os.makedirs(self.folder_path)
+    
+    def get_patient_from_input_data(self):
+
+        sex = "None"
+
+        if((self.btn_male.isChecked() == True) and (self.btn_female.isChecked() == False)):
+            sex = "M"
+        elif((self.btn_male.isChecked() == False) and (self.btn_female.isChecked() == True)):
+            sex = "F"
+        else:
+            #izbaci neki error
+            print("ERROR while getting sex info")
+
+        patient = Patient(self.input_age.text(),sex, self.input_height.text(),self.input_weight.text())
+
+        patient.add_leg_circumfences(self.input_leg_ankle.text(), self.input_leg_calf.text(), self.input_leg_knee.text())
+
+        patient.add_chest_circumfences(self.input_chest_upper.text(), self.input_chest_lower.text())
+
+        return patient
+
+    def show_ble_popup(self):
+        msg = QMessageBox()
+        msg.setWindowTitle("Error")
+        msg.setText("BLE not connected!")
+        msg.setInformativeText("You can't measure if your device is not connected.")
+        #msg.setIcon(QMessageBox.Critical)
+        msg.addButton("Connect device", QMessageBox.AcceptRole)
+
+        msg.buttonClicked.connect(self.popup_button_clicked)
+
+        msg.exec_()
+
+    def popup_button_clicked(self, i):
+        if("Connect device" == i.text()):
+            #go to ble connection screen
+            self.ble_not_connected_error.emit()
+            print("Switching to BLE screen")
+        else:
+            print("Uknown popup button")
