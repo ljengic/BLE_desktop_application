@@ -2,6 +2,8 @@ import os
 import sys
 import time
 from PyQt5 import QtWidgets, QtCore
+from PyQt5.QtMultimedia import *
+from PyQt5.QtCore import *
 from package.main_app.gui import Ui_MainWindow
 from package.home.home import Home
 from package.ble.ble import BLE
@@ -28,8 +30,9 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.home = Home()
         self.ble = BLE()
         self.measure = Measure(self.ble, self.play_fail_sound)
-        self.measure = Measure(self.ble)
         self.results = Results()
+
+        self.measure.ble_not_connected_error.connect(self.btn_ble_on_click)
 
         self.stackedWidget.addWidget(self.home)
         self.stackedWidget.addWidget(self.ble)
@@ -77,10 +80,15 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.label_screen_name.setText("Results")
         self.stackedWidget.setCurrentIndex(3)
 
+    def play_fail_sound(self):
+        self.sound = QSoundEffect()
+        self.sound.setSource(QUrl.fromLocalFile("./sounds/wa_wa.wav"))
+        self.sound.play()
+
 #run application
 def run():
     app = QtWidgets.QApplication(sys.argv)
-    #app.setStyleSheet(app_load_css("./style/Adaptic.qss"))
+    app.setStyleSheet(app_load_css("./style/my_style.qss"))
     window = MainWindow()
     window.show()
     return app.exec_()
