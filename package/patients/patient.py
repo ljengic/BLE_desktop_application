@@ -1,5 +1,6 @@
 import sys
 import time
+import csv
 
 class Patient:
     def __init__(self, age, sex, height, weight):
@@ -34,8 +35,17 @@ class Patient:
         print("Leg calf: ", self.leg_calf)
         print("Leg knee: ", self.leg_knee)
 
-    #def parse_csv_to_patient(self,csv_row):
+    def write_to_csv(self, patient_file_path):
+        print("Writing patient data to file.")
+        with open( patient_file_path, 'w', newline='') as file:
+            self.writer = csv.writer(file)
+            self.writer.writerow(["Age",    self.age])
+            self.writer.writerow(["Sex",    self.sex])
+            self.writer.writerow(["Height", self.height])
+            self.writer.writerow(["Weight", self.weight])
 
+            #zapisi i ostalo
+            file.close()
 
     #function for checking if data is valid
 
