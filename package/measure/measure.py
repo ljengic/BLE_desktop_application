@@ -4,6 +4,7 @@ import time
 import csv
 import pathlib
 import glob
+import sip
 from datetime import date
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QMessageBox
@@ -11,6 +12,8 @@ from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from package.measure.gui_measure import Ui_Measure
 from package.ble.ble import BLE
 from package.patients.patient import Patient
+from package.graphs.graph import Graph
+from package.tools.paths import Paths
 
 class Measure(QtWidgets.QWidget, Ui_Measure):
 
@@ -21,6 +24,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.setupUi(self)
 
         self.ble = ble_instance
+        self.graph = Graph(self.widget_2, True)
         self.play_fail_sound = fail_sound
 
         self.btn_start.clicked.connect(self.btn_start_press_handle)
@@ -29,12 +33,17 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.btn_start_new_measurment.clicked.connect(self.btn_start_new_measurment_handle)
         self.btn_complete.clicked.connect(self.btn_complete_handle)
 
+        self.widget_2.hide()
+
         self.stackedWidget.setCurrentIndex(0)
 
     def btn_start_new_measurment_handle(self):
         #clear text 
         #self.clear_input_text_boxs()
-        
+
+        self.make_measurment_folder()
+        self.paths = Paths(self.folder_path)
+
         #check BLE connection
         if(True == self.ble.is_device_connected()):
             #switch to page for patient data input
@@ -48,6 +57,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         # first check if data is valid !
         self.patient = self.get_patient_from_input_data()
         self.patient.print_patient_info()
+        self.patient.write_to_csv(self.paths.patient_file_path)
         self.stackedWidget.setCurrentIndex(2)
 
     def msg_received(self, msg):
@@ -57,9 +67,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
     def csv_write_raw_data(self, data):
         #change this later, there is no need for opening the file every time
-
-        self.raw_data_file = self.folder_path + '/raw_data.csv'
-        with open(self.raw_data_file, 'a', newline='') as file:
+        with open(self.paths.raw_data_file, 'a', newline='') as file:
             self.writer = csv.writer(file)
             self.writer.writerow(data)
             file.close()
@@ -75,8 +83,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
     def csv_write_temperature_data(self,msg):
         print("Received data from temperature sensor.")
-        self.temp_data_file = self.folder_path + '/temp_data.csv'
-        with open( self.temp_data_file, 'a', newline='') as file:
+        with open( self.paths.temp_data_file, 'a', newline='') as file:
             self.writer = csv.writer(file)
             self.writer.writerow([msg[0],msg[2]])
             file.close()
@@ -85,11 +92,26 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         print("Received data from bioz sensor.")
 
     def btn_start_press_handle(self):
-        self.make_measurment_folder()
+        self.graph.start(self.paths.temp_data_file)
+        self.widget_2.show()
         self.ble.ble_send(3)
 
     def btn_stop_press_handle(self):
         self.ble.ble_send(4)
+        
+        #self.graph.__del__()
+
+        self.widget_2.hide()
+        self.graph.delete_data()
+
+        #self.verticalLayout.removeWidget(self.widget_2)
+        #sip.delete(self.widget_2)
+        #self.widget_2 = None
+
+        #self.widget_2 = QtWidgets.QWidget(self.page_3)
+        #self.widget_2.setObjectName("widget_2")
+        #self.verticalLayout.addWidget(self.widget_2)
+        
         self.stackedWidget.setCurrentIndex(0)
 
     #make folder for this measurment
@@ -103,7 +125,8 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
         self.folder_path = os.getcwd() + "\data\\" + name
         os.makedirs(self.folder_path)
-    
+
+
     def get_patient_from_input_data(self):
 
         sex = "None"
