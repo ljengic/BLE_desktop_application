@@ -88,7 +88,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 #run application
 def run():
     app = QtWidgets.QApplication(sys.argv)
-    app.setStyleSheet(app_load_css("./style/my_style.qss"))
+    #app.setStyleSheet(app_load_css("./style/my_style.qss"))
     window = MainWindow()
     window.show()
     return app.exec_()
