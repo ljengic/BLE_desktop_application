@@ -19,6 +19,9 @@ class Patient:
         self.chest_upper = chest_upper
         self.chest_lower = chest_lower
 
+    def add_medications(self, medications):
+        self.medications = medications
+
     def print_patient_info(self):
         print("\n")
         print("Age:", self.age)
@@ -35,6 +38,8 @@ class Patient:
         print("Leg calf: ", self.leg_calf)
         print("Leg knee: ", self.leg_knee)
 
+        print("Med list: ", self.medications)
+
     def write_to_csv(self, patient_file_path):
         print("Writing patient data to file.")
         with open( patient_file_path, 'w', newline='') as file:
@@ -43,6 +48,11 @@ class Patient:
             self.writer.writerow(["Sex",    self.sex])
             self.writer.writerow(["Height", self.height])
             self.writer.writerow(["Weight", self.weight])
+
+            #write medication at the end, each in one row
+            self.writer.writerow(["Meds, one in each row:"])
+            for med in self.medications:
+                self.writer.writerow([med])
 
             #zapisi i ostalo
             file.close()
