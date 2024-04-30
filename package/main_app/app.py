@@ -18,7 +18,7 @@ def app_load_css(filename):
     return content
 
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
-    
+
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
@@ -29,7 +29,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         self.home = Home()
         self.ble = BLE()
-        self.measure = Measure(self.ble, self.play_fail_sound)
+        self.measure = Measure(self.ble, self.play_fail_sound, self.lock, self.unlock)
         self.results = Results()
 
         self.measure.ble_not_connected_error.connect(self.btn_ble_on_click)
@@ -84,6 +84,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.sound = QSoundEffect()
         self.sound.setSource(QUrl.fromLocalFile("./sounds/wa_wa.wav"))
         self.sound.play()
+
+    def lock(self):
+        self.setEnabled(False)
+    
+    def unlock(self):
+        self.setEnabled(True)
 
 #run application
 def run():
