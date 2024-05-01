@@ -201,12 +201,16 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
     def medicine_added(self, med):
         self.medicine_list.append(med)
         self.medicine_1 = Medicine(self.frame_20, med, self.medicine_remove)
-        self.verticalLayout_20.addWidget(self.medicine_1)
+        self.verticalLayout_21.addWidget(self.medicine_1)
+        self.widget_no_med.hide()
         print(self.medicine_list)
 
     def medicine_remove(self, med_widget, med):
         self.medicine_list.remove(med)
+        #if list is empty put no medication label
+        if([] == self.medicine_list):
+            self.widget_no_med.show()
         print(self.medicine_list)
-        self.verticalLayout_20.removeWidget(med_widget)
+        self.verticalLayout_21.removeWidget(med_widget)
         med_widget.hide()
         del(med_widget)
