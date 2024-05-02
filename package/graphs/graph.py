@@ -2,7 +2,6 @@ import sys
 import time
 import os
 import pandas as pd
-import numpy as np
 import csv
 from random import randint
 import pyqtgraph as pg
@@ -48,7 +47,7 @@ class Graph(QtWidgets.QWidget):
         if(True == self.live_plot):
             # Add a timer to simulate new temperature measurements
             self.timer = QtCore.QTimer()
-            self.timer.setInterval(500)
+            self.timer.setInterval(50)
             self.timer.timeout.connect(self.update_plot)
             self.timer.start()
 
@@ -67,8 +66,8 @@ class Graph(QtWidgets.QWidget):
         if(0 != file_size):
             self.df = pd.read_csv(self.file_path, sep=',', header=None)
             self.df = self.df.values
+            pen = pg.mkPen(color=(255, 0, 0))
             if(None == self.line):
-                pen = pg.mkPen(color=(255, 0, 0))
                 self.line = self.plot_graph.plot(
                     self.df[:,0],
                     self.df[:,1],
@@ -77,4 +76,10 @@ class Graph(QtWidgets.QWidget):
                     #symbol="+",
                     #symbolSize=15,
                     #symbolBrush="b",
+                )
+            else:
+                self.line = self.plot_graph.plot(
+                    self.df[:,0],
+                    self.df[:,1],
+                    pen=pen,
                 )
