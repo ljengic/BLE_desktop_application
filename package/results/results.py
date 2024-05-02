@@ -19,6 +19,7 @@ class Results(QtWidgets.QWidget, Ui_Results):
         self.listWidget.itemClicked.connect(self.list_item_clicked)
         self.btn_show.clicked.connect(self.btn_show_clicked_handle)
         self.btn_refresh.clicked.connect(self.btn_refresh_clicked_handle)
+        self.btn_back.clicked.connect(self.btn_back_clicked_handle)
 
         self.frame_5.hide()
         self.refresh_measurment_list()
@@ -27,15 +28,19 @@ class Results(QtWidgets.QWidget, Ui_Results):
         self.refresh_measurment_list()
 
     def btn_show_clicked_handle(self):
-        self.graph.start( self.paths.temp_data_file)
+        self.graph.start(self.paths.temp_data_file)
         self.stackedWidget.setCurrentIndex(1)
+
+    def btn_back_clicked_handle(self):
+        self.graph.delete_data()
+        self.stackedWidget.setCurrentIndex(0)
 
     def list_item_clicked(self, itemC):
         #self.set_info_data(itemC.data(QtCore.Qt.UserRole))
         self.frame_5.show()
-        self.btn_show.setEnabled(True)
         self.folder_path = os.getcwd() + "\data\\" + itemC.data(QtCore.Qt.UserRole)
         self.paths = Paths(self.folder_path)
+        self.btn_show.setEnabled(True)
 
     def refresh_measurment_list(self):
         self.listWidget.clear()

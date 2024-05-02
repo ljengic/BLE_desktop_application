@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Results(object):
     def setupUi(self, Results):
         Results.setObjectName("Results")
-        Results.resize(1128, 721)
+        Results.resize(872, 657)
         self.gridLayout = QtWidgets.QGridLayout(Results)
         self.gridLayout.setObjectName("gridLayout")
         self.stackedWidget = QtWidgets.QStackedWidget(Results)
@@ -127,11 +127,26 @@ class Ui_Results(object):
         self.stackedWidget.addWidget(self.page)
         self.page_2 = QtWidgets.QWidget()
         self.page_2.setObjectName("page_2")
-        self.gridLayout_5 = QtWidgets.QGridLayout(self.page_2)
-        self.gridLayout_5.setObjectName("gridLayout_5")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.page_2)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        self.frame_9 = QtWidgets.QFrame(self.page_2)
+        self.frame_9.setMinimumSize(QtCore.QSize(0, 50))
+        self.frame_9.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.frame_9.setSizeIncrement(QtCore.QSize(0, 0))
+        self.frame_9.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_9.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_9.setObjectName("frame_9")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.frame_9)
+        self.horizontalLayout_4.setObjectName("horizontalLayout_4")
+        self.btn_back = QtWidgets.QPushButton(self.frame_9)
+        self.btn_back.setObjectName("btn_back")
+        self.horizontalLayout_4.addWidget(self.btn_back)
+        spacerItem2 = QtWidgets.QSpacerItem(732, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
+        self.horizontalLayout_4.addItem(spacerItem2)
+        self.verticalLayout_3.addWidget(self.frame_9)
         self.widget = QtWidgets.QWidget(self.page_2)
         self.widget.setObjectName("widget")
-        self.gridLayout_5.addWidget(self.widget, 0, 0, 1, 1)
+        self.verticalLayout_3.addWidget(self.widget)
         self.stackedWidget.addWidget(self.page_2)
         self.gridLayout.addWidget(self.stackedWidget, 0, 0, 1, 1)
 
@@ -147,6 +162,7 @@ class Ui_Results(object):
         self.label_9.setText(_translate("Results", "List of measurments found:"))
         self.label_3.setText(_translate("Results", "Info about measurment"))
         self.btn_show.setText(_translate("Results", "Show results"))
+        self.btn_back.setText(_translate("Results", "Back"))
 
 
 if __name__ == "__main__":
