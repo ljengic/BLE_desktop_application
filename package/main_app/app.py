@@ -28,7 +28,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.btn_home_2.setChecked(True)
 
         self.home = Home()
-        self.ble = BLE()
+        self.ble = BLE(self.play_fail_sound)
         self.measure = Measure(self.ble, self.play_fail_sound, self.lock, self.unlock)
         self.results = Results()
 

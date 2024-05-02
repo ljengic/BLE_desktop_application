@@ -12,9 +12,11 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
 
     ble_msg_received = pyqtSignal(str)
 
-    def __init__(self, parent=None):
-        super(BLE, self).__init__(parent)
+    def __init__(self, play_fail_sound):
+        super(BLE, self).__init__()
         self.setupUi(self)
+
+        self.play_fail_sound = play_fail_sound
 
         #make instances of scaner and controller classes
         self.ble_scanner = BLE_Scanner()
@@ -113,6 +115,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.frame_7.hide()
         self.listWidget.clear()
         self.frame.show()
+        self.play_fail_sound()
         self.is_connected = False
 
     def suscribe_to_char(self, characterictis):
