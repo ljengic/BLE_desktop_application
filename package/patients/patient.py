@@ -2,6 +2,24 @@ import sys
 import time
 import csv
 
+def get_patient_from_csv(patient_file_path):
+
+    rows = []
+
+    with open( patient_file_path, 'r', newline='') as file:
+            reader = csv.reader(file)
+            for row in reader:
+                rows.append(row)
+            file.close()
+
+    #print(rows)
+
+    patient = Patient(rows[0][1],rows[1][1],rows[2][1],rows[3][1])
+    patient.add_chest_circumfences(rows[4][1], rows[5][1])
+    patient.add_leg_circumfences(rows[6][1], rows[7][1], rows[8][1])
+
+    return patient
+
 class Patient:
     def __init__(self, age, sex, height, weight):
         self.age = age
@@ -48,6 +66,13 @@ class Patient:
             self.writer.writerow(["Sex",    self.sex])
             self.writer.writerow(["Height", self.height])
             self.writer.writerow(["Weight", self.weight])
+
+            self.writer.writerow(["Chest upper", self.chest_upper])
+            self.writer.writerow(["Chest lower", self.chest_lower])
+
+            self.writer.writerow(["Leg ankle", self.leg_ankle])
+            self.writer.writerow(["Leg calf", self.leg_calf])
+            self.writer.writerow(["Leg knee", self.leg_knee])             
 
             #write medication at the end, each in one row
             self.writer.writerow(["Meds, one in each row:"])
