@@ -15,7 +15,7 @@ from package.measure.medicine import Medicine
 from package.ble.ble import BLE
 from package.patients.patient import Patient
 from package.patients.patient import get_patient_from_csv
-from package.graphs.graph import Graph
+from package.graphs.graph_widget import Graph_Widget
 from package.tools.paths import Paths
 
 class Measure(QtWidgets.QWidget, Ui_Measure):
@@ -27,15 +27,19 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.setupUi(self)
 
         self.ble = ble_instance
-        self.graph = Graph(self.widget_2, True)
+        self.graph = Graph_Widget(self.widget_2, True)
+        self.verticalLayout_25.addWidget(self.graph)
+        self.label_27.hide()
+        #self.gridLayout_52 = QtWidgets.QGridLayout(self.page)
+        #self.gridLayout_52.setObjectName("gridLayout_52")
+        #self.gridLayout_52.addWidget(self.graph, 0, 0, 1, 1)
+
         self.play_fail_sound = fail_sound
         self.lock_app = lock_app
         self.unlock_app = unlock_app
 
         self.add_medication = Add_Medication(self.lock_app, self.unlock_app)
 
-        self.btn_start.clicked.connect(self.btn_start_press_handle)
-        self.btn_stop.clicked.connect(self.btn_stop_press_handle)
         self.ble.ble_msg_received.connect(self.msg_received)
         self.btn_start_new_measurment.clicked.connect(self.btn_start_new_measurment_handle)
         self.btn_complete.clicked.connect(self.btn_complete_handle)
@@ -48,10 +52,11 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         #self.medicine_2 = Medicine(self.frame_20, "Vilijamovka")
         #self.verticalLayout_20.addWidget(self.medicine_2)
 
-        self.widget_2.hide()
+        self.btn_start.clicked.connect(self.btn_start_press_handle)
+        self.btn_stop.clicked.connect(self.btn_stop_press_handle)
 
-        self.stackedWidget_2.setCurrentIndex(0)
         self.stackedWidget.setCurrentIndex(0)
+        self.stackedWidget_2.setCurrentIndex(0)
 
     def btn_start_new_measurment_handle(self):
         self.medicine_list = []
@@ -81,6 +86,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
     def msg_received(self, msg):
         msg_list = msg.split(';') 
         self.csv_write_raw_data(msg_list)
+        #print(msg)
         self.decode_msg(msg_list)
 
     def csv_write_raw_data(self, data):
@@ -92,38 +98,70 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
     def decode_msg(self,msg):
         print(msg)
-        if('0' == msg[1]):
-            self.csv_write_bioz_data(msg)
-        elif('1' == msg[1]):
-            self.csv_write_temperature_data(msg)    
-        else:
-            print("ERROR: cannot decode received data")            
-
-    def csv_write_temperature_data(self,msg):
-        print("Received data from temperature sensor.")
-        with open( self.paths.temp_data_file, 'a', newline='') as file:
-            self.writer = csv.writer(file)
-            self.writer.writerow([msg[0],msg[2]])
-            file.close()
+        self.csv_write_bioz_data(msg)
 
     def csv_write_bioz_data(self,msg):
+        self.time_max = self.graph.get_max_time()
+
+        if(float(self.scale(msg[0])) > self.time_max):
+            self.graph.move_to_next_window()
+
+        with open( self.paths.bioz_data_file_frek, 'a', newline='') as file:
+            self.writer = csv.writer(file)
+            self.writer.writerow([msg[1],msg[2]])
+            file.close()
+
+        if(msg[1] == '5'):
+            self.write_to_file(self.paths.bioz_data_file_5, msg)
+
+        if(msg[1] == '53'):
+            self.write_to_file(self.paths.bioz_data_file_50, msg)
+
+        if(msg[1] == '101'):
+            self.write_to_file(self.paths.bioz_data_file_100, msg)
+
+        if(msg[1] == '205'):
+            self.write_to_file(self.paths.bioz_data_file_200, msg)
+
         print("Received data from bioz sensor.")
 
+    def write_to_file(self, path, msg):
+        with open( path, 'a', newline='') as file:
+            self.writer = csv.writer(file)
+            self.writer.writerow([self.scale(msg[0]),msg[2]])
+            file.close()  
+
+    def scale(self, value):
+        self.integer = int(value)
+        self.float = float(self.integer/1000)
+        return str(self.float)
+
+    def make_graph(self):
+        self.graph.set_lines([["5 kHz",self.paths.bioz_data_file_5,'b'],
+        ["50 kHz",self.paths.bioz_data_file_50,'g'],
+        ["100 kHz",self.paths.bioz_data_file_100,'r'],
+        ["200 kHz",self.paths.bioz_data_file_200,'k'],
+        ])
+        self.graph.start()
+
     def btn_start_press_handle(self):
-        self.graph.start(self.paths.temp_data_file)
         self.widget_2.show()
 
         self.stackedWidget_2.setCurrentIndex(1)
 
-        self.ble.ble_send(3)
+        self.ble.ble_send(b'\x01')
+
+        self.make_graph()
 
     def btn_stop_press_handle(self):
-        self.ble.ble_send(4)
+        self.ble.ble_send(b'\x05')
+
+        self.graph.stop()
 
         self.stackedWidget_2.setCurrentIndex(0)
 
-        self.widget_2.hide()
-        self.graph.delete_data()
+        #self.widget_2.hide()
+        #self.graph.delete_data()
 
         #self.verticalLayout.removeWidget(self.widget_2)
         #sip.delete(self.widget_2)
@@ -133,6 +171,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         #self.widget_2.setObjectName("widget_2")
         #self.verticalLayout.addWidget(self.widget_2)
         
+
         self.stackedWidget.setCurrentIndex(0)
 
     #make folder for this measurment
@@ -193,6 +232,8 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.display_age.setText(self.patient.age)
         self.display_height.setText(self.patient.height)
         self.display_weight.setText(self.patient.weight)
+        self.display_sex.setText(self.patient.sex)
+        self.display_bmi.setText(self.patient.bmi)
 
     def bt_add_medication_clicked_handle(self):
         self.add_medication.show_add_medicine_window()
@@ -214,3 +255,5 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.verticalLayout_21.removeWidget(med_widget)
         med_widget.hide()
         del(med_widget)
+
+
