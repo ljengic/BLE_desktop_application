@@ -1,7 +1,7 @@
 import os
 import sys
 import time
-from PyQt5 import QtWidgets, QtCore
+from PyQt5 import QtWidgets, QtCore, QtGui
 from PyQt5.QtMultimedia import *
 from PyQt5.QtCore import *
 from package.main_app.gui import Ui_MainWindow
@@ -22,6 +22,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def __init__(self, parent=None):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
+
+        self.setWindowIcon(QtGui.QIcon('./images/logo.jpeg'))
 
         self.menu_icons_only.setHidden(True)
         self.stackedWidget.setCurrentIndex(0)
