@@ -26,7 +26,10 @@ class Patient:
         self.sex = sex
         self.height = height
         self.weight = weight
+
         #function for calculate BMI
+        self.bmi_float = float(self.weight) / (float(self.height) / 100.0)**2
+        self.bmi = str(round(self.bmi_float, 2))
 
     def add_leg_circumfences(self,leg_ankle, leg_calf, leg_knee):
         self.leg_ankle = leg_ankle
