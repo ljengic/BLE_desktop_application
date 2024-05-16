@@ -14,16 +14,68 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Home(object):
     def setupUi(self, Home):
         Home.setObjectName("Home")
-        Home.resize(580, 458)
-        self.gridLayout = QtWidgets.QGridLayout(Home)
-        self.gridLayout.setObjectName("gridLayout")
-        self.label = QtWidgets.QLabel(Home)
+        Home.resize(1055, 721)
+        self.horizontalLayout = QtWidgets.QHBoxLayout(Home)
+        self.horizontalLayout.setObjectName("horizontalLayout")
+        self.frame = QtWidgets.QFrame(Home)
+        self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame.setObjectName("frame")
+        self.verticalLayout_3 = QtWidgets.QVBoxLayout(self.frame)
+        self.verticalLayout_3.setObjectName("verticalLayout_3")
+        spacerItem = QtWidgets.QSpacerItem(20, 78, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_3.addItem(spacerItem)
+        self.frame_3 = QtWidgets.QFrame(self.frame)
+        self.frame_3.setMinimumSize(QtCore.QSize(0, 500))
+        self.frame_3.setMaximumSize(QtCore.QSize(162222, 500))
+        self.frame_3.setFrameShape(QtWidgets.QFrame.Box)
+        self.frame_3.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_3.setObjectName("frame_3")
+        self.verticalLayout_2 = QtWidgets.QVBoxLayout(self.frame_3)
+        self.verticalLayout_2.setObjectName("verticalLayout_2")
+        self.label_2 = QtWidgets.QLabel(self.frame_3)
+        self.label_2.setMinimumSize(QtCore.QSize(0, 80))
+        self.label_2.setMaximumSize(QtCore.QSize(16777215, 80))
         font = QtGui.QFont()
-        font.setPointSize(20)
-        self.label.setFont(font)
+        font.setPointSize(16)
+        font.setBold(True)
+        font.setWeight(75)
+        self.label_2.setFont(font)
+        self.label_2.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_2.setObjectName("label_2")
+        self.verticalLayout_2.addWidget(self.label_2)
+        spacerItem1 = QtWidgets.QSpacerItem(20, 50, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Fixed)
+        self.verticalLayout_2.addItem(spacerItem1)
+        self.label_3 = QtWidgets.QLabel(self.frame_3)
+        font = QtGui.QFont()
+        font.setPointSize(13)
+        self.label_3.setFont(font)
+        self.label_3.setAlignment(QtCore.Qt.AlignCenter)
+        self.label_3.setObjectName("label_3")
+        self.verticalLayout_2.addWidget(self.label_3)
+        self.verticalLayout_3.addWidget(self.frame_3)
+        spacerItem2 = QtWidgets.QSpacerItem(20, 77, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout_3.addItem(spacerItem2)
+        self.horizontalLayout.addWidget(self.frame)
+        self.frame_2 = QtWidgets.QFrame(Home)
+        self.frame_2.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_2.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_2.setObjectName("frame_2")
+        self.verticalLayout = QtWidgets.QVBoxLayout(self.frame_2)
+        self.verticalLayout.setObjectName("verticalLayout")
+        spacerItem3 = QtWidgets.QSpacerItem(20, 78, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem3)
+        self.label = QtWidgets.QLabel(self.frame_2)
+        self.label.setMinimumSize(QtCore.QSize(500, 500))
+        self.label.setMaximumSize(QtCore.QSize(500, 500))
+        self.label.setText("")
+        self.label.setPixmap(QtGui.QPixmap(":/icons/icons/WhatsApp Image 2024-05-07 at 20.38.39 (1).jpeg"))
         self.label.setAlignment(QtCore.Qt.AlignCenter)
         self.label.setObjectName("label")
-        self.gridLayout.addWidget(self.label, 0, 0, 1, 1)
+        self.verticalLayout.addWidget(self.label)
+        spacerItem4 = QtWidgets.QSpacerItem(20, 77, QtWidgets.QSizePolicy.Minimum, QtWidgets.QSizePolicy.Expanding)
+        self.verticalLayout.addItem(spacerItem4)
+        self.horizontalLayout.addWidget(self.frame_2)
 
         self.retranslateUi(Home)
         QtCore.QMetaObject.connectSlotsByName(Home)
@@ -31,7 +83,20 @@ class Ui_Home(object):
     def retranslateUi(self, Home):
         _translate = QtCore.QCoreApplication.translate
         Home.setWindowTitle(_translate("Home", "Form"))
-        self.label.setText(_translate("Home", "Dobrodošli dragi gosti!"))
+        self.label_2.setText(_translate("Home", "FluidTrack:\n"
+" Smart Textile Bioimpedance Monitoring"))
+        self.label_3.setText(_translate("Home", "Monitor your body\'s fluid levels with precision using\n"
+"\n"
+" FluidTrack, the application designed for real-time\n"
+"\n"
+"  bioimpedance analysis through smart textiles. Our\n"
+"\n"
+"   technology integrates with specially designed shirts\n"
+"\n"
+"    and socks, each equipped with a 4-channel bioimpedance\n"
+"\n"
+"     system to deliver accurate and continuous data."))
+import resources_rc
 
 
 if __name__ == "__main__":
