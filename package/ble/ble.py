@@ -74,7 +74,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         #go through all discoverd services and try to find the one that is used in project
         for servicesUids in self.ble_controller.controller.services():
             self.ble_service_uuid = QBluetoothUuid(servicesUids)
-            if (self.ble_service_uuid == QBluetoothUuid("{00001523-f7b8-48e9-8fe5-8e202813f0d9}")):
+            if (self.ble_service_uuid == QBluetoothUuid("{0000181b-0000-1000-8000-00805f9b34fb}")):
                 #we found our service!
                 self.ble_controller.readService(self.ble_service_uuid)
 
@@ -84,13 +84,15 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         #print found characteristics, for debugging
         for obj in self.ble_controller.openedService.characteristics():
             self.ble_char_uuid = obj.uuid()
-            if (self.ble_char_uuid == QBluetoothUuid("{00001524-f7b8-48e9-8fe5-8e202813f0d9}")):
+            if (self.ble_char_uuid == QBluetoothUuid("{00002a9c-0000-1000-8000-00805f9b34fb}")):
                 #we found our service!
+                print("Found read char")
                 self.read_char = obj
                 self.suscribe_to_char(self.read_char)
 
-            elif (self.ble_char_uuid == QBluetoothUuid("{00001525-f7b8-48e9-8fe5-8e202813f0d9}")):
+            elif (self.ble_char_uuid == QBluetoothUuid("{00002a9b-0000-1000-8000-00805f9b34fb}")):
                 #we found our service!
+                print("Found write char")
                 self.write_char = obj
 
             else:
@@ -136,10 +138,10 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.ble_msg_received.emit(self.ble_string_msg)
 
     def ble_send(self, val):
-        q_b = QByteArray()
-        q_b.setNum(val,10)
+        #q_b = QByteArray()
+        #q_b.setNum(val,10)
         print("Sending command to micreocontroller ",val)
-        self.ble_controller.openedService.writeCharacteristic(self.write_char,q_b,QLowEnergyService.WriteWithoutResponse)
+        self.ble_controller.openedService.writeCharacteristic(self.write_char,val)
 
     def ble_set_info_data(self, device):
         self.label_inf_name.setText(device.name())

@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1048</width>
-    <height>752</height>
+    <width>1233</width>
+    <height>808</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -707,6 +707,9 @@ choose device to connect</string>
          </item>
         </layout>
        </widget>
+      </item>
+      <item>
+       <widget class="QWidget" name="widget_6" native="true"/>
       </item>
       <item>
        <spacer name="horizontalSpacer_3">
