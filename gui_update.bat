@@ -5,6 +5,8 @@ python -m PyQt5.uic.pyuic -x ./package/measure/gui_measure.ui -o ./package/measu
 python -m PyQt5.uic.pyuic -x ./package/measure/gui_add_medication.ui -o ./package/measure/gui_add_medication.py
 python -m PyQt5.uic.pyuic -x ./package/measure/gui_medicine.ui -o ./package/measure/gui_medicine.py
 python -m PyQt5.uic.pyuic -x ./package/results/gui_results.ui -o ./package/results/gui_results.py
+python -m PyQt5.uic.pyuic -x ./package/graphs/gui_graph_widget.ui -o ./package/graphs/gui_graph_widget.py
+python -m PyQt5.uic.pyuic -x ./package/graphs/gui_check_box_widget.ui -o ./package/graphs/gui_check_box_widget.py
 
 python -m PyQt5.pyrcc_main -o ./images/resources_rc.py ./images/resources.qrc
 ::copy "./images/resources_rc.py" "./resources_rc.py"
