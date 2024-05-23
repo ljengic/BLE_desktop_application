@@ -12,11 +12,13 @@ def get_patient_from_csv(patient_file_path):
                 rows.append(row)
             file.close()
 
-    #print(rows)
-
     patient = Patient(rows[0][1],rows[1][1],rows[2][1],rows[3][1])
     patient.add_chest_circumfences(rows[4][1], rows[5][1])
     patient.add_leg_circumfences(rows[6][1], rows[7][1], rows[8][1])
+    patient.medications = []
+
+    for row in rows[10:]:
+        patient.medications.append(row[0])
 
     return patient
 

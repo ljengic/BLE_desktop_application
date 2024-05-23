@@ -1,9 +1,12 @@
 import sys
 import time
-from PyQt5 import QtWidgets, QtCore, QtGui
+from PyQt5 import QtWidgets, QtCore, QtGui, QtMultimedia
 from PyQt5.QtCore import QByteArray
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from PyQt5.QtBluetooth import QBluetoothUuid, QLowEnergyService, QLowEnergyCharacteristic
+from PyQt5.QtMultimedia import *
+from PyQt5.QtCore import *
+from PyQt5.QtMultimediaWidgets import QVideoWidget
 from package.ble.gui_ble import Ui_BLE
 from package.ble.scan import BLE_Scanner
 from package.ble.controller import BLE_Controller
@@ -39,6 +42,16 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
 
         self.stackedWidget.setCurrentIndex(0)
         self.frame_7.hide()
+        self.widget_6.hide()
+
+        self.player = QMediaPlayer()
+        self.player.setMedia(QMediaContent(QUrl.fromLocalFile("./sounds/pedro.mp4")))
+        self.videoWidget = QVideoWidget()
+        self.verticalLayout_12.addWidget(self.videoWidget)
+        #self.videoWidget.resize(300, 300)
+        #self.videoWidget.move(0, 0)
+        self.player.setVideoOutput(self.videoWidget)
+        self.videoWidget.show()
 
     def btn_scan_press_handle(self):
         self.listWidget.clear()
@@ -105,6 +118,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.label_2.setPixmap(QtGui.QPixmap(":/icons/icons/ble_on.png"))
         self.stackedWidget.setCurrentIndex(1)
         self.frame.hide()
+        #self.pedro()
         self.is_connected = True
         print("Successfully connected!\n")
         #self.ble_serviceAgent.scan_services(self.ble_controller.ble_device.address())
@@ -151,5 +165,11 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
 
     def is_device_connected(self):
         return self.is_connected
+
+    def pedro(self):
+        print("Pedro Pedro Pedro PEDRO PEE") 
+        self.widget_6.show()
+        self.player.setPosition(0)
+        self.player.play()
 
 

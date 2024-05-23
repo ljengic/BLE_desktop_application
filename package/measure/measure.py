@@ -14,9 +14,11 @@ from package.measure.add_medication import Add_Medication
 from package.measure.medicine import Medicine
 from package.ble.ble import BLE
 from package.patients.patient import Patient
+from package.patients.select_patient import Select_Patient
 from package.patients.patient import get_patient_from_csv
 from package.graphs.graph_widget import Graph_Widget
-from package.tools.paths import Paths
+from package.paths.patient_path import Patient_Path
+from package.paths.measurment_path import Measurment_Path
 
 class Measure(QtWidgets.QWidget, Ui_Measure):
 
@@ -39,13 +41,17 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.unlock_app = unlock_app
 
         self.add_medication = Add_Medication(self.lock_app, self.unlock_app)
+        self.select_patient = Select_Patient(self.lock_app, self.unlock_app)
 
         self.ble.ble_msg_received.connect(self.msg_received)
-        self.btn_start_new_measurment.clicked.connect(self.btn_start_new_measurment_handle)
+        #self.btn_start_new_measurment.clicked.connect(self.btn_start_new_measurment_handle)
+        self.bnt_new_patient.clicked.connect(self.btn_new_patient_handle)
+        self.btn_select_patient.clicked.connect(self.btn_select_patient_handle)
         self.btn_complete.clicked.connect(self.btn_complete_handle)
 
         self.btn_add_medication.clicked.connect(self.bt_add_medication_clicked_handle)
         self.add_medication.medicine.connect(self.medicine_added)
+        self.select_patient.patient.connect(self.patient_selected)
 
         #self.medicine_1 = Medicine(self.frame_20, "Sljiva, domaca")
         #self.verticalLayout_20.addWidget(self.medicine_1)
@@ -58,13 +64,23 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget_2.setCurrentIndex(0)
 
+    def btn_new_patient_handle(self):
+        self.medicine_list = []
+        self.patient_path = Patient_Path(None) 
+        self.stackedWidget.setCurrentIndex(1)
+
+    def btn_select_patient_handle(self):
+        self.select_patient.show_select_patient_window()      
+
     def btn_start_new_measurment_handle(self):
         self.medicine_list = []
         #clear text 
         #self.clear_input_text_boxs()
 
-        self.make_measurment_folder()
-        self.paths = Paths(self.folder_path)
+        #self.make_measurment_folder()
+        #self.paths = Paths(self.folder_path)
+        self.patient_path = Patient_Path() 
+
 
         #check BLE connection
         #if(True == self.ble.is_device_connected()):
@@ -79,8 +95,9 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         # first check if data is valid !
         self.patient = self.get_patient_from_input_data()
         self.patient.print_patient_info()
-        self.patient.write_to_csv(self.paths.patient_file_path)
+        self.patient.write_to_csv(self.patient_path.patient_file_path)
         self.fill_patient_data()
+        self.measurment_path = Measurment_Path(self.patient_path.folder_path, None)
         self.stackedWidget.setCurrentIndex(2)
 
     def msg_received(self, msg):
@@ -256,4 +273,33 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         med_widget.hide()
         del(med_widget)
 
+    def patient_selected(self,patient_folder_path):
+        self.medicine_list = []
+        self.patient_path = Patient_Path(patient_folder_path) 
+        self.patient = get_patient_from_csv(self.patient_path.patient_file_path)
+        self.fill_patient_input_data(self.patient)
+        self.stackedWidget.setCurrentIndex(1)
+
+    def fill_patient_input_data(self,patient):
+        self.input_age.setText(patient.age)
+        self.input_height.setText(patient.height)
+        self.input_weight.setText(patient.weight)
+
+        if ('M' == patient.sex):
+            self.btn_male.setChecked(True)
+            self.btn_female.setChecked(False)
+        else:
+            self.btn_male.setChecked(False)
+            self.btn_female.setChecked(True)
+
+        self.input_chest_lower.setText(patient.chest_lower)
+        self.input_chest_upper.setText(patient.chest_upper)
+
+        self.input_leg_ankle.setText(patient.leg_ankle)
+        self.input_leg_calf.setText(patient.leg_calf) 
+        self.input_leg_knee.setText(patient.leg_knee)
+
+        for med in patient.medications:
+            print(med)
+            self.medicine_added(med)
 

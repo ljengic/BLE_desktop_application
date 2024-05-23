@@ -20,30 +20,57 @@
       <number>0</number>
      </property>
      <widget class="QWidget" name="page">
-      <layout class="QGridLayout" name="gridLayout">
-       <item row="0" column="0">
-        <widget class="QPushButton" name="btn_start_new_measurment">
+      <layout class="QHBoxLayout" name="horizontalLayout_17">
+       <item>
+        <widget class="QPushButton" name="bnt_new_patient">
          <property name="minimumSize">
           <size>
-           <width>400</width>
+           <width>200</width>
            <height>200</height>
           </size>
          </property>
          <property name="maximumSize">
           <size>
-           <width>400</width>
+           <width>200</width>
            <height>200</height>
           </size>
          </property>
          <property name="font">
           <font>
-           <pointsize>16</pointsize>
+           <pointsize>12</pointsize>
            <weight>75</weight>
            <bold>true</bold>
           </font>
          </property>
          <property name="text">
-          <string>Start new measurment</string>
+          <string>Add new patient</string>
+         </property>
+        </widget>
+       </item>
+       <item>
+        <widget class="QPushButton" name="btn_select_patient">
+         <property name="minimumSize">
+          <size>
+           <width>200</width>
+           <height>200</height>
+          </size>
+         </property>
+         <property name="maximumSize">
+          <size>
+           <width>200</width>
+           <height>200</height>
+          </size>
+         </property>
+         <property name="font">
+          <font>
+           <pointsize>12</pointsize>
+           <weight>75</weight>
+           <bold>true</bold>
+          </font>
+         </property>
+         <property name="text">
+          <string>Select Patient 
+from database</string>
          </property>
         </widget>
        </item>

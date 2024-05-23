@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_BLE(object):
     def setupUi(self, BLE):
         BLE.setObjectName("BLE")
-        BLE.resize(1048, 752)
+        BLE.resize(1255, 788)
         self.verticalLayout_9 = QtWidgets.QVBoxLayout(BLE)
         self.verticalLayout_9.setObjectName("verticalLayout_9")
         self.widget = QtWidgets.QWidget(BLE)
@@ -297,6 +297,13 @@ class Ui_BLE(object):
         self.horizontalLayout_5.addItem(spacerItem9)
         self.verticalLayout_7.addLayout(self.horizontalLayout_5)
         self.horizontalLayout_7.addWidget(self.frame_7)
+        self.widget_6 = QtWidgets.QWidget(self.widget_2)
+        self.widget_6.setMinimumSize(QtCore.QSize(350, 400))
+        self.widget_6.setMaximumSize(QtCore.QSize(350, 16777215))
+        self.widget_6.setObjectName("widget_6")
+        self.verticalLayout_12 = QtWidgets.QVBoxLayout(self.widget_6)
+        self.verticalLayout_12.setObjectName("verticalLayout_12")
+        self.horizontalLayout_7.addWidget(self.widget_6)
         spacerItem10 = QtWidgets.QSpacerItem(232, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout_7.addItem(spacerItem10)
         self.verticalLayout_9.addWidget(self.widget_2)

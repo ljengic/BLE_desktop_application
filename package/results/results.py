@@ -4,7 +4,7 @@ import os
 from PyQt5 import QtWidgets, QtCore
 from package.results.gui_results import Ui_Results
 from package.graphs.graph_widget import Graph_Widget
-from package.tools.paths import Paths
+#from package.tools.paths import Paths
 from package.patients.patient import get_patient_from_csv
 
 class Results(QtWidgets.QWidget, Ui_Results):
@@ -41,7 +41,7 @@ class Results(QtWidgets.QWidget, Ui_Results):
     def list_item_clicked(self, itemC):
         #self.set_info_data(itemC.data(QtCore.Qt.UserRole))
         self.folder_path = os.getcwd() + "\data\\" + itemC.data(QtCore.Qt.UserRole)
-        self.paths = Paths(self.folder_path)
+        #self.paths = Paths(self.folder_path)
         self.patient = get_patient_from_csv(self.paths.patient_file_path)
         self.fill_patient_data()
         self.btn_show.setEnabled(True)

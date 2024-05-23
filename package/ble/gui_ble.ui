@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1233</width>
-    <height>808</height>
+    <width>1255</width>
+    <height>788</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -709,7 +709,21 @@ choose device to connect</string>
        </widget>
       </item>
       <item>
-       <widget class="QWidget" name="widget_6" native="true"/>
+       <widget class="QWidget" name="widget_6" native="true">
+        <property name="minimumSize">
+         <size>
+          <width>350</width>
+          <height>400</height>
+         </size>
+        </property>
+        <property name="maximumSize">
+         <size>
+          <width>350</width>
+          <height>16777215</height>
+         </size>
+        </property>
+        <layout class="QVBoxLayout" name="verticalLayout_12"/>
+       </widget>
       </item>
       <item>
        <spacer name="horizontalSpacer_3">

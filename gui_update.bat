@@ -7,6 +7,7 @@ python -m PyQt5.uic.pyuic -x ./package/measure/gui_medicine.ui -o ./package/meas
 python -m PyQt5.uic.pyuic -x ./package/results/gui_results.ui -o ./package/results/gui_results.py
 python -m PyQt5.uic.pyuic -x ./package/graphs/gui_graph_widget.ui -o ./package/graphs/gui_graph_widget.py
 python -m PyQt5.uic.pyuic -x ./package/graphs/gui_check_box_widget.ui -o ./package/graphs/gui_check_box_widget.py
+python -m PyQt5.uic.pyuic -x ./package/patients/gui_select_patient.ui -o ./package/patients/gui_select_patient.py
 
 python -m PyQt5.pyrcc_main -o ./images/resources_rc.py ./images/resources.qrc
 ::copy "./images/resources_rc.py" "./resources_rc.py"
