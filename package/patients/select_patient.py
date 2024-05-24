@@ -22,8 +22,9 @@ class Select_Patient(QtWidgets.QWidget, Ui_Patient_select):
         self.btn_select.clicked.connect(self.btn_select_clicked_handle)    
 
     def show_select_patient_window(self):
-        self.refresh_patient_list()
         self.lock_app()
+        self.refresh_patient_list()
+        self.check_if_empty()
         self.show()
 
     def btn_select_clicked_handle(self):
@@ -45,6 +46,12 @@ class Select_Patient(QtWidgets.QWidget, Ui_Patient_select):
                 self.item2add.setText(name)
                 self.item2add.setData(QtCore.Qt.UserRole, name)
                 self.listWidget.addItem(self.item2add)
+
+    def check_if_empty(self):
+        if(0 == self.listWidget.count()):
+            self.label.setText("Database is empty!\nPlease add new patient.")
+        else:
+            self.label.setText("Please select one of the\npatient in database:")
 
     def list_item_clicked(self, itemC):
         self.folder_path = os.getcwd() + "\data\\" + itemC.data(QtCore.Qt.UserRole)

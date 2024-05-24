@@ -10,11 +10,12 @@ from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtWidgets import QMessageBox
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from package.measure.gui_measure import Ui_Measure
-from package.measure.add_medication import Add_Medication
-from package.measure.medicine import Medicine
+from package.medicine.add_medication import Add_Medication
+from package.medicine.medicine import Medicine
 from package.ble.ble import BLE
 from package.patients.patient import Patient
 from package.patients.select_patient import Select_Patient
+from package.patients.invalid_data import Invalid_Data
 from package.patients.patient import get_patient_from_csv
 from package.graphs.graph_widget import Graph_Widget
 from package.paths.patient_path import Patient_Path
@@ -42,6 +43,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
         self.add_medication = Add_Medication(self.lock_app, self.unlock_app)
         self.select_patient = Select_Patient(self.lock_app, self.unlock_app)
+        self.invalid_data = Invalid_Data(self.lock_app, self.unlock_app)
 
         self.ble.ble_msg_received.connect(self.msg_received)
         #self.btn_start_new_measurment.clicked.connect(self.btn_start_new_measurment_handle)
@@ -65,12 +67,24 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.stackedWidget_2.setCurrentIndex(0)
 
     def btn_new_patient_handle(self):
-        self.medicine_list = []
-        self.patient_path = Patient_Path(None) 
-        self.stackedWidget.setCurrentIndex(1)
+        if(True == self.check_ble_connection()):
+            self.medicine_list = []
+            self.patient_path = Patient_Path(None)
+            self.label_input_patient.setText("Please fill new patient data") 
+            self.stackedWidget.setCurrentIndex(1)
 
     def btn_select_patient_handle(self):
-        self.select_patient.show_select_patient_window()      
+        if(True == self.check_ble_connection()):
+            self.select_patient.show_select_patient_window()      
+
+    def check_ble_connection(self):
+        #check BLE connection
+        if(False == self.ble.is_device_connected()):
+            #self.play_fail_sound()
+            self.show_ble_popup()
+            print("BLE not connected, you cannot measure, sorryy, byee.")
+            return False
+        return True
 
     def btn_start_new_measurment_handle(self):
         self.medicine_list = []
@@ -82,33 +96,27 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.patient_path = Patient_Path() 
 
 
-        #check BLE connection
-        #if(True == self.ble.is_device_connected()):
-            #switch to page for patient data input
-        self.stackedWidget.setCurrentIndex(1)
-        #else:
-        #    self.play_fail_sound()
-        #    self.show_ble_popup()
-        #    print("BLE not connected, you cannot measure, sorryy, byee.")
-
     def btn_complete_handle(self):
         # first check if data is valid !
         self.patient = self.get_patient_from_input_data()
-        self.patient.print_patient_info()
-        self.patient.write_to_csv(self.patient_path.patient_file_path)
-        self.fill_patient_data()
-        self.measurment_path = Measurment_Path(self.patient_path.folder_path, None)
-        self.stackedWidget.setCurrentIndex(2)
+        if(True == self.check_data()):
+            self.measurment_path = Measurment_Path(self.patient_path.folder_path, None)
+            self.patient.calculate_bmi()
+            self.patient.print_patient_info()
+            self.patient.write_to_csv(self.patient_path.patient_file_path)
+            self.patient.write_to_csv(self.measurment_path.patient_file_path)
+            self.fill_patient_data()
+            self.stackedWidget.setCurrentIndex(2)
 
     def msg_received(self, msg):
         msg_list = msg.split(';') 
         self.csv_write_raw_data(msg_list)
-        #print(msg)
-        self.decode_msg(msg_list)
+        print(msg)
+        #self.decode_msg(msg_list)
 
     def csv_write_raw_data(self, data):
         #change this later, there is no need for opening the file every time
-        with open(self.paths.raw_data_file, 'a', newline='') as file:
+        with open(self.measurment_path.raw_data_file, 'a', newline='') as file:
             self.writer = csv.writer(file)
             self.writer.writerow(data)
             file.close()
@@ -166,12 +174,12 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
         self.stackedWidget_2.setCurrentIndex(1)
 
-        self.ble.ble_send(b'\x01')
+        self.ble.ble_send(3)
 
         self.make_graph()
 
     def btn_stop_press_handle(self):
-        self.ble.ble_send(b'\x05')
+        self.ble.ble_send(4)
 
         self.graph.stop()
 
@@ -190,19 +198,6 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         
 
         self.stackedWidget.setCurrentIndex(0)
-
-    #make folder for this measurment
-    def make_measurment_folder(self):
-        today = date.today()
-        name_prefix = "Measurment_" + today.strftime("%m-%d-%Y") + '_#'
-
-        today_dirs = glob.glob('data/'+name_prefix+'*')
-        today_measurments = len(today_dirs)
-        name = name_prefix + str(today_measurments + 1)
-
-        self.folder_path = os.getcwd() + "\data\\" + name
-        os.makedirs(self.folder_path)
-
 
     def get_patient_from_input_data(self):
 
@@ -274,12 +269,14 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         del(med_widget)
 
     def patient_selected(self,patient_folder_path):
-        self.medicine_list = []
+        self.label_input_patient.setText("Check patient info and edit them if needed") 
         self.patient_path = Patient_Path(patient_folder_path) 
         self.patient = get_patient_from_csv(self.patient_path.patient_file_path)
+        self.medicine_list = []
         self.fill_patient_input_data(self.patient)
         self.stackedWidget.setCurrentIndex(1)
 
+    #fill input data with patient data from database
     def fill_patient_input_data(self,patient):
         self.input_age.setText(patient.age)
         self.input_height.setText(patient.height)
@@ -303,3 +300,12 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
             print(med)
             self.medicine_added(med)
 
+    #check if input data is valid
+    #if valid return True, otherwise return False
+    def check_data(self):
+        ret = True
+        msg = self.patient.check_patient_data()
+        if("Ok" != msg):
+            self.invalid_data.show_invalid_data_window(msg)
+            ret = False
+        return ret

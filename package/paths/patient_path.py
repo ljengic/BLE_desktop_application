@@ -15,6 +15,8 @@ class Patient_Path:
         else:
             self.folder_path = folder_path
 
+        self.name = self.folder_path.split('\\')[-1]
+
         self.patient_file_path = self.make_patient_path()
 
         self.make_patient_file()

@@ -32,7 +32,7 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         self.home = Home()
         self.ble = BLE(self.play_fail_sound)
         self.measure = Measure(self.ble, self.play_fail_sound, self.lock, self.unlock)
-        self.results = Results()
+        self.results = Results(self.lock, self.unlock)
 
         self.measure.ble_not_connected_error.connect(self.btn_ble_on_click)
 

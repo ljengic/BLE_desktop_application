@@ -2,7 +2,7 @@ import sys
 import time
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
-from package.measure.gui_add_medication import Ui_Add_Medication
+from package.medicine.gui_add_medication import Ui_Add_Medication
 
 class Add_Medication(QtWidgets.QWidget, Ui_Add_Medication):
     medicine = pyqtSignal(str)

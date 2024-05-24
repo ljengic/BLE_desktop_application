@@ -1,6 +1,7 @@
 import sys
 import time
 import csv
+from numbers import Number
 
 def get_patient_from_csv(patient_file_path):
 
@@ -29,10 +30,6 @@ class Patient:
         self.height = height
         self.weight = weight
 
-        #function for calculate BMI
-        self.bmi_float = float(self.weight) / (float(self.height) / 100.0)**2
-        self.bmi = str(round(self.bmi_float, 2))
-
     def add_leg_circumfences(self,leg_ankle, leg_calf, leg_knee):
         self.leg_ankle = leg_ankle
         self.leg_calf = leg_calf
@@ -44,6 +41,11 @@ class Patient:
 
     def add_medications(self, medications):
         self.medications = medications
+
+    def calculate_bmi(self):
+        #function for calculate BMI
+        self.bmi_float = float(self.weight) / (float(self.height) / 100.0)**2
+        self.bmi = str(round(self.bmi_float, 2))
 
     def print_patient_info(self):
         print("\n")
@@ -87,5 +89,36 @@ class Patient:
             #zapisi i ostalo
             file.close()
 
-    #function for checking if data is valid
+    def check_patient_data(self):
+
+        if(False == self.age.isnumeric()):
+            return "Age is empty or invalid!"
+
+        if(False == self.height.isnumeric()):
+            return "Height is empty or invalid!"
+
+        if(False == self.weight.isnumeric()):
+            return "Weight is empty or invalid!"
+
+        if(self.sex != 'M' and self.sex != 'F'):
+            return "Please choose patient sex!"            
+
+        #chest circumfence
+        if(False == self.chest_upper.isnumeric()):
+            return "Chest upper is empty or invalid!"
+
+        if(False == self.chest_lower.isnumeric()):
+            return "Chest lower is empty or invalid!"         
+
+        #leg circumfence
+        if(False == self.leg_ankle.isnumeric()):
+            return "Leg ankle is empty or invalid!"
+
+        if(False == self.leg_calf.isnumeric()):
+            return "Leg calf is empty or invalid!"
+
+        if(False == self.leg_knee.isnumeric()):
+            return "Leg knee is empty or invalid!"
+
+        return "Ok"
 
