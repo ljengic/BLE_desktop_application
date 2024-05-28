@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './package/patients/gui_invalid_data.ui'
+# Form implementation generated from reading ui file './package/ble/gui_not_connected.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -11,13 +11,13 @@
 from PyQt5 import QtCore, QtGui, QtWidgets
 
 
-class Ui_Invalid_data(object):
-    def setupUi(self, Invalid_data):
-        Invalid_data.setObjectName("Invalid_data")
-        Invalid_data.resize(260, 185)
-        self.gridLayout = QtWidgets.QGridLayout(Invalid_data)
+class Ui_BLE_not_connected(object):
+    def setupUi(self, BLE_not_connected):
+        BLE_not_connected.setObjectName("BLE_not_connected")
+        BLE_not_connected.resize(253, 197)
+        self.gridLayout = QtWidgets.QGridLayout(BLE_not_connected)
         self.gridLayout.setObjectName("gridLayout")
-        self.frame = QtWidgets.QFrame(Invalid_data)
+        self.frame = QtWidgets.QFrame(BLE_not_connected)
         self.frame.setFrameShape(QtWidgets.QFrame.StyledPanel)
         self.frame.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame.setObjectName("frame")
@@ -71,31 +71,32 @@ class Ui_Invalid_data(object):
         self.horizontalLayout.setObjectName("horizontalLayout")
         spacerItem = QtWidgets.QSpacerItem(143, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
         self.horizontalLayout.addItem(spacerItem)
-        self.btn_ok = QtWidgets.QPushButton(self.widget)
-        self.btn_ok.setDefault(True)
-        self.btn_ok.setObjectName("btn_ok")
-        self.horizontalLayout.addWidget(self.btn_ok)
+        self.btn_connect = QtWidgets.QPushButton(self.widget)
+        self.btn_connect.setDefault(True)
+        self.btn_connect.setObjectName("btn_connect")
+        self.horizontalLayout.addWidget(self.btn_connect)
         self.verticalLayout.addWidget(self.widget)
         self.gridLayout.addWidget(self.frame, 0, 0, 1, 1)
 
-        self.retranslateUi(Invalid_data)
-        QtCore.QMetaObject.connectSlotsByName(Invalid_data)
+        self.retranslateUi(BLE_not_connected)
+        QtCore.QMetaObject.connectSlotsByName(BLE_not_connected)
 
-    def retranslateUi(self, Invalid_data):
+    def retranslateUi(self, BLE_not_connected):
         _translate = QtCore.QCoreApplication.translate
-        Invalid_data.setWindowTitle(_translate("Invalid_data", "Form"))
-        self.label.setText(_translate("Invalid_data", "Patient data is invalid!"))
-        self.label_2.setText(_translate("Invalid_data", "Details:"))
-        self.label_3.setText(_translate("Invalid_data", "This is where mesage goes!"))
-        self.btn_ok.setText(_translate("Invalid_data", "Ok"))
+        BLE_not_connected.setWindowTitle(_translate("BLE_not_connected", "Form"))
+        self.label.setText(_translate("BLE_not_connected", "Device not connected!"))
+        self.label_2.setText(_translate("BLE_not_connected", "Details:"))
+        self.label_3.setText(_translate("BLE_not_connected", "You cannot measure until BLE device\n"
+" is connected"))
+        self.btn_connect.setText(_translate("BLE_not_connected", "Connect"))
 import resources_rc
 
 
 if __name__ == "__main__":
     import sys
     app = QtWidgets.QApplication(sys.argv)
-    Invalid_data = QtWidgets.QWidget()
-    ui = Ui_Invalid_data()
-    ui.setupUi(Invalid_data)
-    Invalid_data.show()
+    BLE_not_connected = QtWidgets.QWidget()
+    ui = Ui_BLE_not_connected()
+    ui.setupUi(BLE_not_connected)
+    BLE_not_connected.show()
     sys.exit(app.exec_())

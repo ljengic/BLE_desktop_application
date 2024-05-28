@@ -23,13 +23,10 @@ from package.paths.measurment_path import Measurment_Path
 
 class Measure(QtWidgets.QWidget, Ui_Measure):
 
-    ble_not_connected_error = pyqtSignal()
-
-    def __init__(self,ble_instance, fail_sound, lock_app, unlock_app):
+    def __init__(self, main_app):
         super(Measure, self).__init__()
         self.setupUi(self)
 
-        self.ble = ble_instance
         self.graph = Graph_Widget(self.widget_2, True)
         self.verticalLayout_25.addWidget(self.graph)
         self.label_27.hide()
@@ -37,15 +34,13 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         #self.gridLayout_52.setObjectName("gridLayout_52")
         #self.gridLayout_52.addWidget(self.graph, 0, 0, 1, 1)
 
-        self.play_fail_sound = fail_sound
-        self.lock_app = lock_app
-        self.unlock_app = unlock_app
+        self.main_app = main_app
 
-        self.add_medication = Add_Medication(self.lock_app, self.unlock_app)
-        self.select_patient = Select_Patient(self.lock_app, self.unlock_app)
-        self.invalid_data = Invalid_Data(self.lock_app, self.unlock_app)
+        self.add_medication = Add_Medication(self.main_app)
+        self.select_patient = Select_Patient(self.main_app)
+        self.invalid_data = Invalid_Data(self.main_app)
 
-        self.ble.ble_msg_received.connect(self.msg_received)
+        self.main_app.ble.ble_msg_received.connect(self.msg_received)
         #self.btn_start_new_measurment.clicked.connect(self.btn_start_new_measurment_handle)
         self.bnt_new_patient.clicked.connect(self.btn_new_patient_handle)
         self.btn_select_patient.clicked.connect(self.btn_select_patient_handle)
@@ -66,25 +61,19 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.stackedWidget.setCurrentIndex(0)
         self.stackedWidget_2.setCurrentIndex(0)
 
+        #this variable is true if patient is new, need for making new patient folder after valid data
+        self.is_patient_new = False
+
     def btn_new_patient_handle(self):
-        if(True == self.check_ble_connection()):
-            self.medicine_list = []
-            self.patient_path = Patient_Path(None)
-            self.label_input_patient.setText("Please fill new patient data") 
-            self.stackedWidget.setCurrentIndex(1)
+        #if(True == self.main_app.ble.is_device_connected()):
+        self.medicine_list = []
+        self.label_input_patient.setText("Please fill new patient data") 
+        self.stackedWidget.setCurrentIndex(1)
+        self.is_patient_new = True
 
     def btn_select_patient_handle(self):
-        if(True == self.check_ble_connection()):
-            self.select_patient.show_select_patient_window()      
-
-    def check_ble_connection(self):
-        #check BLE connection
-        if(False == self.ble.is_device_connected()):
-            #self.play_fail_sound()
-            self.show_ble_popup()
-            print("BLE not connected, you cannot measure, sorryy, byee.")
-            return False
-        return True
+        #if(True == self.main_app.ble.is_device_connected()):
+        self.select_patient.show_select_patient_window()      
 
     def btn_start_new_measurment_handle(self):
         self.medicine_list = []
@@ -103,6 +92,10 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
             self.measurment_path = Measurment_Path(self.patient_path.folder_path, None)
             self.patient.calculate_bmi()
             self.patient.print_patient_info()
+            
+            if(True == self.is_patient_new):
+                self.patient_path = Patient_Path(None)
+
             self.patient.write_to_csv(self.patient_path.patient_file_path)
             self.patient.write_to_csv(self.measurment_path.patient_file_path)
             self.fill_patient_data()
@@ -174,12 +167,12 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
         self.stackedWidget_2.setCurrentIndex(1)
 
-        self.ble.ble_send(3)
+        self.main_app.ble.ble_send(3)
 
         self.make_graph()
 
     def btn_stop_press_handle(self):
-        self.ble.ble_send(4)
+        self.main_app.ble.ble_send(4)
 
         self.graph.stop()
 
@@ -218,28 +211,6 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
         return patient
 
-    def show_ble_popup(self):
-        self.lock_app()
-        msg = QMessageBox()
-        msg.setWindowTitle("Error")
-        msg.setText("BLE not connected!")
-        msg.setInformativeText("You can't measure if your device is not connected.")
-        #msg.setIcon(QMessageBox.Critical)
-        msg.addButton("Connect device", QMessageBox.AcceptRole)
-
-        msg.buttonClicked.connect(self.popup_button_clicked)
-
-        msg.exec_()
-
-    def popup_button_clicked(self, i):
-        if("Connect device" == i.text()):
-            #go to ble connection screen
-            self.ble_not_connected_error.emit()
-            print("Switching to BLE screen")
-            self.unlock_app()
-        else:
-            print("Uknown popup button")
-
     def fill_patient_data(self):
         self.display_age.setText(self.patient.age)
         self.display_height.setText(self.patient.height)
@@ -269,7 +240,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         del(med_widget)
 
     def patient_selected(self,patient_folder_path):
-        self.label_input_patient.setText("Check patient info and edit them if needed") 
+        self.label_input_patient.setText("Check patient info and edit them if changed") 
         self.patient_path = Patient_Path(patient_folder_path) 
         self.patient = get_patient_from_csv(self.patient_path.patient_file_path)
         self.medicine_list = []

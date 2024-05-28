@@ -3,27 +3,27 @@ import time
 import os
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
-from package.patients.gui_invalid_data import Ui_Invalid_data
+from package.ble.gui_not_connected import Ui_BLE_not_connected
 from package.main_app.tools import set_window_icon_and_title
 
-class Invalid_Data(QtWidgets.QWidget, Ui_Invalid_data):
+class BLE_Not_Connected(QtWidgets.QWidget, Ui_BLE_not_connected):
     
     def __init__(self, main_app):
-        super(Invalid_Data, self).__init__()
+        super(BLE_Not_Connected, self).__init__()
         self.setupUi(self)
 
-        self.setFixedSize(260, 180)
+        self.setFixedSize(250, 200)
         set_window_icon_and_title(self)
         self.main_app = main_app
 
-        self.btn_ok.clicked.connect(self.close_window)
+        self.btn_connect.clicked.connect(self.btn_connect_handler)
 
-    def show_invalid_data_window(self, msg):
+    def show_BLE_not_connected_window(self):
         self.main_app.lock()
-        self.label_3.setText(msg)
         self.show()
 
-    def close_window(self):
+    def btn_connect_handler(self):
+        self.main_app.btn_ble_on_click()
         self.close()
         self = None
 

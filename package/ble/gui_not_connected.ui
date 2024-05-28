@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ui version="4.0">
- <class>Invalid_data</class>
- <widget class="QWidget" name="Invalid_data">
+ <class>BLE_not_connected</class>
+ <widget class="QWidget" name="BLE_not_connected">
   <property name="geometry">
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>260</width>
-    <height>185</height>
+    <width>253</width>
+    <height>197</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -100,7 +100,7 @@
             <enum>QFrame::NoFrame</enum>
            </property>
            <property name="text">
-            <string>Patient data is invalid!</string>
+            <string>Device not connected!</string>
            </property>
            <property name="alignment">
             <set>Qt::AlignCenter</set>
@@ -130,7 +130,8 @@
          </font>
         </property>
         <property name="text">
-         <string>This is where mesage goes!</string>
+         <string>You cannot measure until BLE device
+ is connected</string>
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
@@ -154,9 +155,9 @@
           </spacer>
          </item>
          <item>
-          <widget class="QPushButton" name="btn_ok">
+          <widget class="QPushButton" name="btn_connect">
            <property name="text">
-            <string>Ok</string>
+            <string>Connect</string>
            </property>
            <property name="default">
             <bool>true</bool>

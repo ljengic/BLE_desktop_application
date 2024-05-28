@@ -10,20 +10,23 @@ from PyQt5.QtMultimediaWidgets import QVideoWidget
 from package.ble.gui_ble import Ui_BLE
 from package.ble.scan import BLE_Scanner
 from package.ble.controller import BLE_Controller
+from package.ble.BLE_not_connected import BLE_Not_Connected
 
 class BLE(QtWidgets.QWidget, Ui_BLE):
 
     ble_msg_received = pyqtSignal(str)
 
-    def __init__(self, play_fail_sound):
+    def __init__(self, main_app):
         super(BLE, self).__init__()
         self.setupUi(self)
 
-        self.play_fail_sound = play_fail_sound
+        self.main_app = main_app
 
         #make instances of scaner and controller classes
         self.ble_scanner = BLE_Scanner()
         self.ble_controller = BLE_Controller()
+
+        self.ble_not_connected = BLE_Not_Connected(self.main_app)
 
         self.is_connected = False
 
@@ -46,6 +49,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
 
         self.player = QMediaPlayer()
         self.player.setMedia(QMediaContent(QUrl.fromLocalFile("./sounds/pedro.mp4")))
+        self.player.mediaStatusChanged.connect(self.media_status_changed_handle)
         self.videoWidget = QVideoWidget()
         self.verticalLayout_12.addWidget(self.videoWidget)
         #self.videoWidget.resize(300, 300)
@@ -116,9 +120,10 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.label_conn_status.setText("Connected")
         self.label_ble_info.setText("Wohooo, you can start measuring :)")
         self.label_2.setPixmap(QtGui.QPixmap(":/icons/icons/ble_on.png"))
+        self.main_app.ble_connected()
         self.stackedWidget.setCurrentIndex(1)
         self.frame.hide()
-        #self.pedro()
+        self.pedro()
         self.is_connected = True
         print("Successfully connected!\n")
         #self.ble_serviceAgent.scan_services(self.ble_controller.ble_device.address())
@@ -127,11 +132,12 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.label_conn_status.setText("Disconnected")
         self.label_ble_info.setText("Please scan availabe BLE devices and \nchoose device to connect")
         self.label_2.setPixmap(QtGui.QPixmap(":/icons/icons/ble_off.png"))
+        self.main_app.ble_disconnected()
         self.stackedWidget.setCurrentIndex(0)
         self.frame_7.hide()
         self.listWidget.clear()
         self.frame.show()
-        self.play_fail_sound()
+        self.main_app.play_fail_sound()
         self.is_connected = False
 
     def suscribe_to_char(self, characterictis):
@@ -164,6 +170,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.label_inf_address.setText(device.address().toString())
 
     def is_device_connected(self):
+        self.ble_not_connected.show_BLE_not_connected_window()
         return self.is_connected
 
     def pedro(self):
@@ -171,5 +178,11 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.widget_6.show()
         self.player.setPosition(0)
         self.player.play()
+
+    def media_status_changed_handle(self, media_status):
+        if(QMediaPlayer.EndOfMedia == media_status):
+            #video je zaavrsio, makni widget sa Pedrom
+            self.widget_6.hide()
+
 
 

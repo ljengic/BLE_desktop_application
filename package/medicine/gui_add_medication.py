@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './package/measure/gui_add_medication.ui'
+# Form implementation generated from reading ui file './package/medicine/gui_add_medication.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #

@@ -12,12 +12,11 @@ from package.paths.measurment_path import Measurment_Path
 from package.medicine.medicine import Medicine
 
 class Results(QtWidgets.QWidget, Ui_Results):
-    def __init__(self, lock_app, unlock_app):
+    def __init__(self, main_app):
         super(Results, self).__init__()
         self.setupUi(self)
         
-        self.lock_app = lock_app
-        self.unlock_app = unlock_app
+        self.main_app = main_app
 
         self.graph = Graph_Widget(self.widget, False)
         self.verticalLayout_4.addWidget(self.graph)
@@ -25,7 +24,7 @@ class Results(QtWidgets.QWidget, Ui_Results):
 
         self.stackedWidget.setCurrentIndex(0)
 
-        self.select_patient = Select_Patient(self.lock_app, self.unlock_app)
+        self.select_patient = Select_Patient(self.main_app)
         self.select_patient.patient.connect(self.patient_selected)
         self.btn_select_patient.clicked.connect(self.btn_select_patient_handle)
         self.btn_back_main.clicked.connect(self.btn_back_main_handle)
@@ -60,12 +59,23 @@ class Results(QtWidgets.QWidget, Ui_Results):
     def fill_patient_data(self):
         self.label_name.setText(self.patient_path.name)
 
-        self.display_age.setText(self.patient.age)
-        self.display_height.setText(self.patient.height)
-        self.display_weight.setText(self.patient.weight)
-        self.display_sex.setText(self.patient.sex)
+        self.display_age.setText(self.patient.age + " years")
+        self.display_height.setText(self.patient.height + " cm")
+        self.display_weight.setText(self.patient.weight + " kg")
+        if("M" == self.patient.sex):
+            sex = "male"
+        else:
+            sex = "female"
+        self.display_sex.setText(sex)
         self.display_bmi.setText(self.patient.bmi)
+
+        self.display_chest_upper.setText(self.patient.chest_upper + " cm")
+        self.display_chest_lower.setText(self.patient.chest_lower + " cm")
         
+        self.display_leg_ankle.setText(self.patient.leg_ankle + " cm")
+        self.display_leg_calf.setText(self.patient.leg_calf + " cm")
+        self.display_leg_knee.setText(self.patient.leg_knee + " cm")
+
         for med in self.patient.medications:
             print(med)
             self.medicine_added(med)

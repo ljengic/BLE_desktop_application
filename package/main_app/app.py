@@ -9,6 +9,7 @@ from package.home.home import Home
 from package.ble.ble import BLE
 from package.measure.measure import Measure
 from package.results.results import Results
+from package.main_app.tools import set_window_icon_and_title
 
 #function to load css file in application
 def app_load_css(filename):
@@ -23,18 +24,16 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         super(MainWindow, self).__init__(parent)
         self.setupUi(self)
 
-        self.setWindowIcon(QtGui.QIcon('./images/logo.jpeg'))
+        set_window_icon_and_title(self)
 
         self.menu_icons_only.setHidden(True)
         self.stackedWidget.setCurrentIndex(0)
         self.btn_home_2.setChecked(True)
 
         self.home = Home()
-        self.ble = BLE(self.play_fail_sound)
-        self.measure = Measure(self.ble, self.play_fail_sound, self.lock, self.unlock)
-        self.results = Results(self.lock, self.unlock)
-
-        self.measure.ble_not_connected_error.connect(self.btn_ble_on_click)
+        self.ble = BLE(self)
+        self.measure = Measure(self)
+        self.results = Results(self)
 
         self.stackedWidget.addWidget(self.home)
         self.stackedWidget.addWidget(self.ble)
@@ -81,6 +80,12 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
     def btn_results_on_click(self):
         self.label_screen_name.setText("Results")
         self.stackedWidget.setCurrentIndex(3)
+
+    def ble_connected(self):
+        self.label_ble.setPixmap(QtGui.QPixmap(":/icons/icons/ble_on.png"))
+
+    def ble_disconnected(self):
+        self.label_ble.setPixmap(QtGui.QPixmap(":/icons/icons/ble_off.png"))
 
     def play_fail_sound(self):
         self.sound = QSoundEffect()

@@ -4,16 +4,18 @@ import os
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from package.patients.gui_select_patient import Ui_Patient_select
+from package.main_app.tools import set_window_icon_and_title
 
 class Select_Patient(QtWidgets.QWidget, Ui_Patient_select):
     patient = pyqtSignal(str)
     
-    def __init__(self, lock_app, unlock_app):
+    def __init__(self, main_app):
         super(Select_Patient, self).__init__()
         self.setupUi(self)
 
-        self.lock_app = lock_app
-        self.unlock_app = unlock_app
+        self.setFixedSize(280, 320)
+        set_window_icon_and_title(self)
+        self.main_app = main_app
 
         self.btn_select.setEnabled(False)
 
@@ -22,7 +24,7 @@ class Select_Patient(QtWidgets.QWidget, Ui_Patient_select):
         self.btn_select.clicked.connect(self.btn_select_clicked_handle)    
 
     def show_select_patient_window(self):
-        self.lock_app()
+        self.main_app.lock()
         self.refresh_patient_list()
         self.check_if_empty()
         self.show()
@@ -33,7 +35,6 @@ class Select_Patient(QtWidgets.QWidget, Ui_Patient_select):
 
     def close_window(self):
         self.close()
-        self.unlock_app()
         self = None
 
     def refresh_patient_list(self):
@@ -56,3 +57,7 @@ class Select_Patient(QtWidgets.QWidget, Ui_Patient_select):
     def list_item_clicked(self, itemC):
         self.folder_path = os.getcwd() + "\data\\" + itemC.data(QtCore.Qt.UserRole)
         self.btn_select.setEnabled(True)
+
+    def closeEvent(self, event):
+        self.main_app.unlock()
+        event.accept()

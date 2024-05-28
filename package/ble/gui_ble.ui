@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>1255</width>
-    <height>788</height>
+    <width>1170</width>
+    <height>708</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -279,6 +279,13 @@ choose device to connect</string>
                   <height>40</height>
                  </size>
                 </property>
+                <property name="font">
+                 <font>
+                  <pointsize>10</pointsize>
+                  <weight>75</weight>
+                  <bold>true</bold>
+                 </font>
+                </property>
                 <property name="text">
                  <string>Scan</string>
                 </property>
@@ -429,6 +436,13 @@ choose device to connect</string>
                       <width>150</width>
                       <height>40</height>
                      </size>
+                    </property>
+                    <property name="font">
+                     <font>
+                      <pointsize>10</pointsize>
+                      <weight>75</weight>
+                      <bold>true</bold>
+                     </font>
                     </property>
                     <property name="text">
                      <string>Connect</string>

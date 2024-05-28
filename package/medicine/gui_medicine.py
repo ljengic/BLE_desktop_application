@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file './package/measure/gui_medicine.ui'
+# Form implementation generated from reading ui file './package/medicine/gui_medicine.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.10
 #
@@ -14,7 +14,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Medicine(object):
     def setupUi(self, Medicine):
         Medicine.setObjectName("Medicine")
-        Medicine.resize(269, 59)
+        Medicine.resize(222, 30)
         self.gridLayout = QtWidgets.QGridLayout(Medicine)
         self.gridLayout.setContentsMargins(0, 0, 0, 0)
         self.gridLayout.setObjectName("gridLayout")
@@ -26,7 +26,18 @@ class Ui_Medicine(object):
         self.horizontalLayout = QtWidgets.QHBoxLayout(self.frame)
         self.horizontalLayout.setContentsMargins(0, 0, 0, 0)
         self.horizontalLayout.setObjectName("horizontalLayout")
+        self.label_2 = QtWidgets.QLabel(self.frame)
+        self.label_2.setMinimumSize(QtCore.QSize(15, 15))
+        self.label_2.setMaximumSize(QtCore.QSize(15, 15))
+        self.label_2.setText("")
+        self.label_2.setPixmap(QtGui.QPixmap(":/icons/icons/icons8-dot-50.png"))
+        self.label_2.setScaledContents(True)
+        self.label_2.setObjectName("label_2")
+        self.horizontalLayout.addWidget(self.label_2)
         self.label = QtWidgets.QLabel(self.frame)
+        font = QtGui.QFont()
+        font.setPointSize(10)
+        self.label.setFont(font)
         self.label.setObjectName("label")
         self.horizontalLayout.addWidget(self.label)
         spacerItem = QtWidgets.QSpacerItem(118, 20, QtWidgets.QSizePolicy.Expanding, QtWidgets.QSizePolicy.Minimum)
@@ -44,6 +55,7 @@ class Ui_Medicine(object):
         Medicine.setWindowTitle(_translate("Medicine", "Form"))
         self.label.setText(_translate("Medicine", "rakija"))
         self.btn_remove.setText(_translate("Medicine", "Remove"))
+import resources_rc
 
 
 if __name__ == "__main__":
