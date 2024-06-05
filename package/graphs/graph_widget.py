@@ -64,10 +64,3 @@ class Graph_Widget(QtWidgets.QWidget, Ui_Graph_widget):
             #self.verticalLayout.removeItem(w)
             w.hide()
             del w
-
-    def get_max_time(self):
-        return self.graph.get_max_time()
-
-    def move_to_next_window(self):
-        self.graph.move_to_next_window()
-

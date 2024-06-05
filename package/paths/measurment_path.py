@@ -6,6 +6,7 @@ import pathlib
 import glob
 import sip
 from datetime import date
+from package.paths.make_file import make_file
 
 class Measurment_Path:
     def __init__(self, patient_path, folder_path):
@@ -22,8 +23,16 @@ class Measurment_Path:
         self.patient_file_path = self.make_patient_path()
         self.raw_data_file = self.make_raw_path()
 
-        self.make_patient_file()
-        self.make_raw_file()
+        self.accel_x_path = self.make_accel_x_path()
+        self.accel_y_path = self.make_accel_y_path()
+        self.accel_z_path = self.make_accel_z_path()
+
+        make_file(self.patient_file_path)
+        make_file(self.raw_data_file)
+
+        make_file(self.accel_x_path)
+        make_file(self.accel_y_path)
+        make_file(self.accel_z_path)
 
     def make_measurment_folder(self):
         today = date.today()
@@ -47,11 +56,11 @@ class Measurment_Path:
     def make_raw_path(self):
         return self.folder_path + '/raw_data.csv'
 
-######################################################################
-###################### MAKE FILES ####################################
+    def make_accel_x_path(self):
+        return self.folder_path + '/accel_x.csv'
 
-    def make_patient_file(self):
-        open(self.patient_file_path, 'a', newline='')
+    def make_accel_y_path(self):
+        return self.folder_path + '/accel_y.csv'  
 
-    def make_raw_file(self):
-        open(self.raw_data_file, 'a', newline='')
+    def make_accel_z_path(self):
+        return self.folder_path + '/accel_z.csv'          

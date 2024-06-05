@@ -6,6 +6,7 @@ import pathlib
 import glob
 import sip
 from datetime import date
+from package.paths.make_file import make_file
 
 class Patient_Path:
     def __init__(self, folder_path):
@@ -19,7 +20,7 @@ class Patient_Path:
 
         self.patient_file_path = self.make_patient_path()
 
-        self.make_patient_file()
+        make_file(self.patient_file_path)
 
     #make folder for patient
     def make_patient_folder(self):
@@ -35,16 +36,8 @@ class Patient_Path:
 
         return folder_path
 
-
 ######################################################################
 ###################### MAKE PATHS ####################################
 
     def make_patient_path(self):
         return self.folder_path + '/patient.csv'
-
-
-######################################################################
-###################### MAKE FILES ####################################
-
-    def make_patient_file(self):
-        open(self.patient_file_path, 'a', newline='')

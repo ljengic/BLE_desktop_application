@@ -4,7 +4,7 @@ import os
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from package.patients.gui_invalid_data import Ui_Invalid_data
-from package.main_app.tools import set_window_icon_and_title
+from package.tools import set_window_icon_and_title
 
 class Invalid_Data(QtWidgets.QWidget, Ui_Invalid_data):
     

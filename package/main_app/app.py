@@ -9,7 +9,7 @@ from package.home.home import Home
 from package.ble.ble import BLE
 from package.measure.measure import Measure
 from package.results.results import Results
-from package.main_app.tools import set_window_icon_and_title
+from package.tools import set_window_icon_and_title
 
 #function to load css file in application
 def app_load_css(filename):

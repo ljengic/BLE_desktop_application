@@ -4,7 +4,7 @@ import os
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from package.ble.gui_not_connected import Ui_BLE_not_connected
-from package.main_app.tools import set_window_icon_and_title
+from package.tools import set_window_icon_and_title
 
 class BLE_Not_Connected(QtWidgets.QWidget, Ui_BLE_not_connected):
     

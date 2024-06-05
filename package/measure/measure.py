@@ -21,6 +21,9 @@ from package.graphs.graph_widget import Graph_Widget
 from package.paths.patient_path import Patient_Path
 from package.paths.measurment_path import Measurment_Path
 
+from package.tools import write_to_file
+from package.parser import decode_msg
+
 class Measure(QtWidgets.QWidget, Ui_Measure):
 
     def __init__(self, main_app):
@@ -45,6 +48,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.bnt_new_patient.clicked.connect(self.btn_new_patient_handle)
         self.btn_select_patient.clicked.connect(self.btn_select_patient_handle)
         self.btn_complete.clicked.connect(self.btn_complete_handle)
+        self.btn_back_main.clicked.connect(self.btn_back_main_handle)
 
         self.btn_add_medication.clicked.connect(self.bt_add_medication_clicked_handle)
         self.add_medication.medicine.connect(self.medicine_added)
@@ -66,7 +70,9 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
     def btn_new_patient_handle(self):
         #if(True == self.main_app.ble.is_device_connected()):
+        self.clear_input_text_boxes()
         self.medicine_list = []
+        self.medicine_widget_list = []
         self.label_input_patient.setText("Please fill new patient data") 
         self.stackedWidget.setCurrentIndex(1)
         self.is_patient_new = True
@@ -74,16 +80,6 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
     def btn_select_patient_handle(self):
         #if(True == self.main_app.ble.is_device_connected()):
         self.select_patient.show_select_patient_window()      
-
-    def btn_start_new_measurment_handle(self):
-        self.medicine_list = []
-        #clear text 
-        #self.clear_input_text_boxs()
-
-        #self.make_measurment_folder()
-        #self.paths = Paths(self.folder_path)
-        self.patient_path = Patient_Path() 
-
 
     def btn_complete_handle(self):
         # first check if data is valid !
@@ -100,65 +96,18 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
             self.patient.write_to_csv(self.measurment_path.patient_file_path)
             self.fill_patient_data()
             self.stackedWidget.setCurrentIndex(2)
+            self.make_graph()
 
     def msg_received(self, msg):
         msg_list = msg.split(';') 
-        self.csv_write_raw_data(msg_list)
-        print(msg)
-        #self.decode_msg(msg_list)
-
-    def csv_write_raw_data(self, data):
-        #change this later, there is no need for opening the file every time
-        with open(self.measurment_path.raw_data_file, 'a', newline='') as file:
-            self.writer = csv.writer(file)
-            self.writer.writerow(data)
-            file.close()
-
-    def decode_msg(self,msg):
-        print(msg)
-        self.csv_write_bioz_data(msg)
-
-    def csv_write_bioz_data(self,msg):
-        self.time_max = self.graph.get_max_time()
-
-        if(float(self.scale(msg[0])) > self.time_max):
-            self.graph.move_to_next_window()
-
-        with open( self.paths.bioz_data_file_frek, 'a', newline='') as file:
-            self.writer = csv.writer(file)
-            self.writer.writerow([msg[1],msg[2]])
-            file.close()
-
-        if(msg[1] == '5'):
-            self.write_to_file(self.paths.bioz_data_file_5, msg)
-
-        if(msg[1] == '53'):
-            self.write_to_file(self.paths.bioz_data_file_50, msg)
-
-        if(msg[1] == '101'):
-            self.write_to_file(self.paths.bioz_data_file_100, msg)
-
-        if(msg[1] == '205'):
-            self.write_to_file(self.paths.bioz_data_file_200, msg)
-
-        print("Received data from bioz sensor.")
-
-    def write_to_file(self, path, msg):
-        with open( path, 'a', newline='') as file:
-            self.writer = csv.writer(file)
-            self.writer.writerow([self.scale(msg[0]),msg[2]])
-            file.close()  
-
-    def scale(self, value):
-        self.integer = int(value)
-        self.float = float(self.integer/1000)
-        return str(self.float)
+        write_to_file(self.measurment_path.raw_data_file, msg_list)
+        #print(msg)
+        decode_msg(self.measurment_path,msg_list)
 
     def make_graph(self):
-        self.graph.set_lines([["5 kHz",self.paths.bioz_data_file_5,'b'],
-        ["50 kHz",self.paths.bioz_data_file_50,'g'],
-        ["100 kHz",self.paths.bioz_data_file_100,'r'],
-        ["200 kHz",self.paths.bioz_data_file_200,'k'],
+        self.graph.set_lines([["X",self.measurment_path.accel_x_path,'b'],
+        ["Y",self.measurment_path.accel_y_path,'g'],
+        ["Z",self.measurment_path.accel_z_path,'r'],
         ])
         self.graph.start()
 
@@ -226,6 +175,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.medicine_list.append(med)
         self.medicine_1 = Medicine(self.frame_20, med, self.medicine_remove)
         self.verticalLayout_21.addWidget(self.medicine_1)
+        self.medicine_widget_list.append(self.medicine_1)
         self.widget_no_med.hide()
         print(self.medicine_list)
 
@@ -244,6 +194,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.patient_path = Patient_Path(patient_folder_path) 
         self.patient = get_patient_from_csv(self.patient_path.patient_file_path)
         self.medicine_list = []
+        self.medicine_widget_list = []
         self.fill_patient_input_data(self.patient)
         self.stackedWidget.setCurrentIndex(1)
 
@@ -280,3 +231,32 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
             self.invalid_data.show_invalid_data_window(msg)
             ret = False
         return ret
+
+    def btn_back_main_handle(self):
+        self.medicine_all_remove()
+        self.stackedWidget.setCurrentIndex(0)
+        #TO DO
+        #ocisti podatke
+
+    def medicine_all_remove(self):
+        self.widget_no_med.show()
+
+        for med_widget in  self.medicine_widget_list:
+            self.verticalLayout_21.removeWidget(med_widget)
+            med_widget.hide()
+            del(med_widget)
+
+    def clear_input_text_boxes(self):
+        self.input_age.setText("")
+        self.input_height.setText("")
+        self.input_weight.setText("")
+
+        self.btn_male.setChecked(False)
+        self.btn_female.setChecked(False)
+
+        self.input_chest_lower.setText("")
+        self.input_chest_upper.setText("")
+
+        self.input_leg_ankle.setText("")
+        self.input_leg_calf.setText("") 
+        self.input_leg_knee.setText("")        

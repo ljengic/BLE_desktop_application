@@ -38,8 +38,11 @@ class Graph(QtWidgets.QWidget):
         self.plot_graph.addLegend()
         self.plot_graph.showGrid(x=True, y=True)
 
-        #disable zoom in y axis
-        self.plot_graph.plotItem.setMouseEnabled(x=True,y=False) # Only allow zoom in X-axis
+        if(True == self.live_plot):
+            #disable zoom in x and y axis
+            self.plot_graph.plotItem.setMouseEnabled(x=False,y=False)
+            #disable zoom in y axis
+            self.plot_graph.plotItem.setMouseEnabled(x=True,y=False) # Only allow zoom in X-axis
 
         #hide legend
         self.legend = self.plot_graph.addLegend()
@@ -75,7 +78,7 @@ class Graph(QtWidgets.QWidget):
 
         print("starting pplot")
 
-        self.plot_graph.setYRange(0, 2000)
+        self.plot_graph.setYRange(-15, 15)
         self.update_plot()
 
         if(True == self.live_plot):
@@ -84,7 +87,7 @@ class Graph(QtWidgets.QWidget):
             self.plot_graph.setXRange(self.time_min, self.time_max)
             # Add a timer to simulate new temperature measurements
             self.timer = QtCore.QTimer()
-            self.timer.setInterval(500)
+            self.timer.setInterval(200)
             self.timer.timeout.connect(self.update_plot)
             self.timer.start()
 
@@ -106,9 +109,15 @@ class Graph(QtWidgets.QWidget):
         if(0 != file_size):
             self.df = pd.read_csv(line[1], sep=',', header=None)
             self.df = self.df.values
+            self.check_time_window(float(self.df[-1][0]))
             if(None != line[2]):
                 #print("updating data")
                 line[2].setData(self.df[:,0], self.df[:,1])
+
+    def check_time_window(self, time):
+        if(True == self.live_plot):
+            if(time > self.time_max):
+                self.move_to_next_window()
 
     def create_line(self, line):
         print("pravim liniju")
@@ -150,8 +159,3 @@ class Graph(QtWidgets.QWidget):
             self.time_min = self.time_min + 30
             self.time_max = self.time_max + 30
             self.plot_graph.setXRange(self.time_min, self.time_max)
-
-
-    def get_max_time(self):
-        return self.time_max
- 

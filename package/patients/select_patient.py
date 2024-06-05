@@ -4,7 +4,7 @@ import os
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from package.patients.gui_select_patient import Ui_Patient_select
-from package.main_app.tools import set_window_icon_and_title
+from package.tools import set_window_icon_and_title
 
 class Select_Patient(QtWidgets.QWidget, Ui_Patient_select):
     patient = pyqtSignal(str)

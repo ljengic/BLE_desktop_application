@@ -3,7 +3,7 @@ import time
 from PyQt5 import QtWidgets, QtCore
 from PyQt5.QtCore import QObject, pyqtSignal, pyqtSlot
 from package.medicine.gui_add_medication import Ui_Add_Medication
-from package.main_app.tools import set_window_icon_and_title
+from package.tools import set_window_icon_and_title
 
 class Add_Medication(QtWidgets.QWidget, Ui_Add_Medication):
     medicine = pyqtSignal(str)
