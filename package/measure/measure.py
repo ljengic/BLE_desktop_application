@@ -23,6 +23,8 @@ from package.paths.measurment_path import Measurment_Path
 
 from package.tools import write_to_file
 from package.parser import decode_msg
+from package.tools import get_max_from_csv
+
 
 class Measure(QtWidgets.QWidget, Ui_Measure):
 
@@ -69,17 +71,17 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.is_patient_new = False
 
     def btn_new_patient_handle(self):
-        #if(True == self.main_app.ble.is_device_connected()):
-        self.clear_input_text_boxes()
-        self.medicine_list = []
-        self.medicine_widget_list = []
-        self.label_input_patient.setText("Please fill new patient data") 
-        self.stackedWidget.setCurrentIndex(1)
-        self.is_patient_new = True
+        if(True == self.main_app.ble.is_device_connected()):
+            self.clear_input_text_boxes()
+            self.medicine_list = []
+            self.medicine_widget_list = []
+            self.label_input_patient.setText("Please fill new patient data") 
+            self.stackedWidget.setCurrentIndex(1)
+            self.is_patient_new = True
 
     def btn_select_patient_handle(self):
-        #if(True == self.main_app.ble.is_device_connected()):
-        self.select_patient.show_select_patient_window()      
+        if(True == self.main_app.ble.is_device_connected()):
+            self.select_patient.show_select_patient_window()      
 
     def btn_complete_handle(self):
         # first check if data is valid !
@@ -101,15 +103,15 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
     def msg_received(self, msg):
         msg_list = msg.split(';') 
         write_to_file(self.measurment_path.raw_data_file, msg_list)
-        #print(msg)
+        print(msg)
         decode_msg(self.measurment_path,msg_list)
 
     def make_graph(self):
-        self.graph.set_lines([["X",self.measurment_path.accel_x_path,'b'],
-        ["Y",self.measurment_path.accel_y_path,'g'],
-        ["Z",self.measurment_path.accel_z_path,'r'],
+        self.graph.set_lines([["5 kHz",self.measurment_path.bioz_5_path,'b'],
+        ["50 kHz",self.measurment_path.bioz_50_path,'g'],
+        ["100 kHz",self.measurment_path.bioz_100_path,'r'],
+        ["200 kHz",self.measurment_path.bioz_200_path,'k'],
         ])
-        self.graph.start()
 
     def btn_start_press_handle(self):
         self.widget_2.show()
@@ -118,7 +120,7 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
 
         self.main_app.ble.ble_send(3)
 
-        self.make_graph()
+        self.graph.start()
 
     def btn_stop_press_handle(self):
         self.main_app.ble.ble_send(4)
@@ -126,6 +128,8 @@ class Measure(QtWidgets.QWidget, Ui_Measure):
         self.graph.stop()
 
         self.stackedWidget_2.setCurrentIndex(0)
+
+        get_max_from_csv(self.measurment_path.bioz_max_path)
 
         #self.widget_2.hide()
         #self.graph.delete_data()

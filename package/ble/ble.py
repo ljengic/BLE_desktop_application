@@ -123,7 +123,7 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.main_app.ble_connected()
         self.stackedWidget.setCurrentIndex(1)
         self.frame.hide()
-        self.pedro()
+        #self.pedro()
         self.is_connected = True
         print("Successfully connected!\n")
         #self.ble_serviceAgent.scan_services(self.ble_controller.ble_device.address())
@@ -170,7 +170,8 @@ class BLE(QtWidgets.QWidget, Ui_BLE):
         self.label_inf_address.setText(device.address().toString())
 
     def is_device_connected(self):
-        self.ble_not_connected.show_BLE_not_connected_window()
+        if(False == self.is_connected):
+            self.ble_not_connected.show_BLE_not_connected_window()
         return self.is_connected
 
     def pedro(self):

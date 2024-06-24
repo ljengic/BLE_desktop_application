@@ -27,12 +27,26 @@ class Measurment_Path:
         self.accel_y_path = self.make_accel_y_path()
         self.accel_z_path = self.make_accel_z_path()
 
+        self.bioz_5_path = self.make_bioz_5_path()
+        self.bioz_50_path = self.make_bioz_50_path()
+        self.bioz_100_path = self.make_bioz_100_path()
+        self.bioz_200_path = self.make_bioz_200_path()
+
+        self.bioz_max_path = self.make_bioz_max_path()
+
         make_file(self.patient_file_path)
         make_file(self.raw_data_file)
 
         make_file(self.accel_x_path)
         make_file(self.accel_y_path)
         make_file(self.accel_z_path)
+
+        make_file(self.bioz_5_path)
+        make_file(self.bioz_50_path)
+        make_file(self.bioz_100_path)
+        make_file(self.bioz_200_path)
+
+        make_file(self.bioz_max_path)
 
     def make_measurment_folder(self):
         today = date.today()
@@ -63,4 +77,20 @@ class Measurment_Path:
         return self.folder_path + '/accel_y.csv'  
 
     def make_accel_z_path(self):
-        return self.folder_path + '/accel_z.csv'          
+        return self.folder_path + '/accel_z.csv'
+
+    def make_bioz_5_path(self):
+        return self.folder_path + '/bioz_5.csv'
+
+    def make_bioz_50_path(self):
+        return self.folder_path + '/bioz_50.csv'
+
+    def make_bioz_100_path(self):
+        return self.folder_path + '/bioz_100.csv'
+
+    def make_bioz_200_path(self):
+        return self.folder_path + '/bioz_200.csv'
+
+    def make_bioz_max_path(self):
+        return self.folder_path + '/bioz_max.csv'
+          

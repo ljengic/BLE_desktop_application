@@ -31,9 +31,9 @@ class Graph(QtWidgets.QWidget):
         #self.setCentralWidget(self.plot_graph)
         self.gridLayout.addWidget(self.plot_graph, 0, 0, 1, 1)
         self.plot_graph.setBackground("w")
-        self.plot_graph.setTitle("Impedance vs Time", color="black", size="16pt")
+        self.plot_graph.setTitle("Acceleration vs Time", color="black", size="16pt")
         styles = {"color": "black", "font-size": "18px"}
-        self.plot_graph.setLabel("left", "Impedance (Ω)", **styles)
+        self.plot_graph.setLabel("left", "Acceleration (m/s^2)", **styles)
         self.plot_graph.setLabel("bottom", "Time (s)", **styles)
         self.plot_graph.addLegend()
         self.plot_graph.showGrid(x=True, y=True)
@@ -78,7 +78,7 @@ class Graph(QtWidgets.QWidget):
 
         print("starting pplot")
 
-        self.plot_graph.setYRange(-15, 15)
+        self.plot_graph.setYRange(0, 300)
         self.update_plot()
 
         if(True == self.live_plot):

@@ -25,7 +25,7 @@ class BLE_Controller(QObject):
         self.controller.serviceDiscovered.connect(self.service_found_print)
         self.controller.discoveryFinished.connect(self.serviceScanDone)
 
-        self.controller.setRemoteAddressType(QLowEnergyController.PublicAddress)
+        #self.controller.setRemoteAddressType(QLowEnergyController.PublicAddress)
         self.controller.connectToDevice()
 
     #disconnect from device
@@ -36,7 +36,7 @@ class BLE_Controller(QObject):
     def deviceConnected(self):
         print("Device connected\n")
         self.controllerConnected.emit()
-        time.sleep(0.1)
+        time.sleep(0.05)
         self.controller.discoverServices()
 
     #print descovered service, used for debugging
